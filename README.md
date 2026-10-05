@@ -36,3 +36,24 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 Real credentials belong in `.env.local` and must never be committed.
+
+## Supabase setup
+
+1. Create a dedicated Supabase project for FieldNote.
+2. Run the migration in `supabase/migrations` against that project.
+3. Add the project URL and publishable key to `.env.local`.
+4. In Supabase Auth URL Configuration, add `http://localhost:3000/auth/callback`
+   as an allowed redirect URL for local development.
+
+The browser only receives the Supabase publishable key. Database row-level
+security restricts customers, catalog items, notes, and line items to their
+owner.
+
+## Current milestone
+
+- Passwordless email authentication and protected workspace
+- Customer and price catalog creation
+- Manual field-note drafts
+- Per-user row-level security
+
+Voice capture, AI extraction, and PayPal invoice creation are the next milestones.

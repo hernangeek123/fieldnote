@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+.npm-cache/
+supabase/.temp/
 
 # debug
 npm-debug.log*
