@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, UserPlus, Users } from "lucide-react";
+import { Mail, MapPin, Phone, Users } from "lucide-react";
 import { createCustomer } from "@/app/app/actions";
 import { Notice } from "@/components/notice";
 import { SubmitButton } from "@/components/submit-button";
@@ -49,7 +49,7 @@ export default async function CustomersPage({ searchParams }: PageProps) {
               <span className="field-label">Service address</span>
               <textarea className="field-input min-h-20 py-3" name="address" maxLength={240} />
             </label>
-            <SubmitButton label="Add customer" pendingLabel="Adding..." icon={UserPlus} />
+            <SubmitButton label="Add customer" pendingLabel="Adding..." icon="user-plus" />
           </form>
         </section>
 

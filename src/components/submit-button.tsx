@@ -1,16 +1,25 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import type { LucideIcon } from "lucide-react";
+import { Plus, Save, UserPlus, type LucideIcon } from "lucide-react";
+
+type SubmitButtonIcon = "plus" | "save" | "user-plus";
+
+const icons = {
+  plus: Plus,
+  save: Save,
+  "user-plus": UserPlus,
+} satisfies Record<SubmitButtonIcon, LucideIcon>;
 
 type SubmitButtonProps = {
   label: string;
   pendingLabel: string;
-  icon: LucideIcon;
+  icon: SubmitButtonIcon;
 };
 
-export function SubmitButton({ label, pendingLabel, icon: Icon }: SubmitButtonProps) {
+export function SubmitButton({ label, pendingLabel, icon }: SubmitButtonProps) {
   const { pending } = useFormStatus();
+  const Icon = icons[icon];
 
   return (
     <button

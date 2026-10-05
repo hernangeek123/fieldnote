@@ -1,4 +1,4 @@
-import { CircleDollarSign, PackageOpen, Plus } from "lucide-react";
+import { CircleDollarSign, PackageOpen } from "lucide-react";
 import { createCatalogItem } from "@/app/app/actions";
 import { Notice } from "@/components/notice";
 import { SubmitButton } from "@/components/submit-button";
@@ -36,7 +36,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               <label className="block"><span className="field-label">Price</span><div className="relative"><span className="absolute left-3 top-3 text-[#657068]">$</span><input className="field-input pl-7" name="price" type="number" min="0" step="0.01" required /></div></label>
               <label className="block"><span className="field-label">Per</span><input className="field-input" name="unit" defaultValue="job" required maxLength={40} /></label>
             </div>
-            <SubmitButton label="Add service" pendingLabel="Adding..." icon={Plus} />
+            <SubmitButton label="Add service" pendingLabel="Adding..." icon="plus" />
           </form>
         </section>
 

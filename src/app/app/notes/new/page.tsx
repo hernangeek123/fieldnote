@@ -1,4 +1,4 @@
-import { BookOpenText, Save } from "lucide-react";
+import { BookOpenText } from "lucide-react";
 import { createFieldNote } from "@/app/app/actions";
 import { Notice } from "@/components/notice";
 import { SubmitButton } from "@/components/submit-button";
@@ -39,7 +39,7 @@ export default async function NewNotePage({ searchParams }: PageProps) {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#e1e5e0] pt-5">
           <p className="flex items-center gap-2 text-sm text-[#657068]"><BookOpenText size={17} />Saved notes remain drafts until you review them.</p>
-          <SubmitButton label="Save draft" pendingLabel="Saving..." icon={Save} />
+          <SubmitButton label="Save draft" pendingLabel="Saving..." icon="save" />
         </div>
       </form>
     </div>
