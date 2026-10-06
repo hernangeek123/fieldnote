@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getVercelOidcToken } from "@vercel/oidc";
 import { z } from "zod";
 import { extractFieldNote } from "@/lib/ai/extract-field-note";
 import { transcribeFieldNote } from "@/lib/ai/transcribe-field-note";
@@ -24,6 +25,16 @@ async function authenticatedClient() {
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) redirect("/login");
   return supabase;
+}
+
+async function isAIGatewayConfigured() {
+  if (process.env.AI_GATEWAY_API_KEY) return true;
+
+  try {
+    return Boolean(await getVercelOidcToken());
+  } catch {
+    return false;
+  }
 }
 
 const optionalText = z
@@ -109,7 +120,7 @@ export async function transcribeFieldNoteAudio(
 ): Promise<AudioTranscriptionResult> {
   await authenticatedClient();
 
-  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
+  if (!(await isAIGatewayConfigured())) {
     return { ok: false, error: "Audio transcription is not configured for this environment yet." };
   }
 
@@ -184,7 +195,7 @@ export async function generateFieldNoteLineItems(noteId: string, formData: FormD
   if (existingItems.length && formData.get("replace_existing") !== "true") {
     redirect(messageUrl(path, "error", "Confirm replacement before regenerating line items."));
   }
-  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
+  if (!(await isAIGatewayConfigured())) {
     redirect(messageUrl(path, "error", "AI Gateway is not configured for this environment yet."));
   }
 
