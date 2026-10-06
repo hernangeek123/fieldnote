@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Plus, Save, Trash2 } from "lucide-react";
+import { AlertTriangle, Check, Plus, Save, Trash2 } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { saveFieldNoteReview } from "@/app/app/actions";
 
@@ -152,11 +152,20 @@ export function ReviewEditor({ noteId, status, catalog, initialItems }: ReviewEd
       <div className="divide-y divide-[#e1e5e0]">
         {items.map((item, index) => {
           const lineTotal = Number(item.quantity) * Number(item.unit_price);
+          const needsAttention = !item.catalog_item_id || Number(item.unit_price) === 0;
           return (
             <div key={item.key} className="p-5 sm:p-6">
               <input type="hidden" name="line_item_id" value={item.id} />
               <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-semibold text-[#566159]">Item {index + 1}</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm font-semibold text-[#566159]">Item {index + 1}</p>
+                  {needsAttention ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-md bg-[#fff3d6] px-2 py-1 text-xs font-semibold text-[#765513]">
+                      <AlertTriangle size={13} aria-hidden="true" />
+                      Check item
+                    </span>
+                  ) : null}
+                </div>
                 {!locked && items.length > 1 ? (
                   <button
                     type="button"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Mail, MapPin, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
+import { AiGenerateButton } from "@/components/ai-generate-button";
 import { Notice } from "@/components/notice";
 import { ReviewEditor } from "@/components/review-editor";
 import { StatusBadge } from "@/components/status-badge";
@@ -60,6 +61,9 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
             {date.format(new Date(`${note.occurred_on}T00:00:00`))}
           </p>
         </div>
+        {note.status === "draft" ? (
+          <AiGenerateButton noteId={note.id} hasItems={Boolean(lineItemsResult.data?.length)} />
+        ) : null}
       </div>
 
       <Notice error={first(query.error)} success={first(query.created)} />

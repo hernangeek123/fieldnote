@@ -49,12 +49,21 @@ The browser only receives the Supabase publishable key. Database row-level
 security restricts customers, catalog items, notes, and line items to their
 owner.
 
+## AI setup
+
+FieldNote uses Vercel AI Gateway and structured outputs. Vercel deployments
+authenticate with OIDC automatically. For local development, link the Vercel
+project and pull its environment, or set an uncommitted `AI_GATEWAY_API_KEY`.
+The model defaults to `openai/gpt-5.4-mini` and can be changed with
+`AI_GATEWAY_MODEL`.
+
 ## Current milestone
 
 - Passwordless email authentication and protected workspace
 - Customer and price catalog creation
 - Manual field-note drafts
+- AI-generated price-book suggestions with review flags
 - Editable line-item review with price-book matching and approval
 - Per-user row-level security
 
-Voice capture, AI extraction, and PayPal invoice creation are the next milestones.
+Voice capture and PayPal invoice creation are the next milestones.

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { extractFieldNote } from "@/lib/ai/extract-field-note";
 import { createClient } from "@/lib/supabase/server";
 
 function messageUrl(path: string, type: "created" | "error", message: string) {
@@ -87,6 +88,89 @@ export async function createFieldNote(formData: FormData) {
 
   revalidatePath("/app");
   redirect(messageUrl("/app/notes/new", "created", "Field note saved as a draft."));
+}
+
+export async function generateFieldNoteLineItems(noteId: string, formData: FormData) {
+  const path = `/app/notes/${noteId}`;
+  const supabase = await authenticatedClient();
+  const [{ data: note, error: noteError }, { data: catalog, error: catalogError }, { data: existingItems, error: itemsError }] =
+    await Promise.all([
+      supabase
+        .from("field_notes")
+        .select("id, raw_note, status")
+        .eq("id", noteId)
+        .maybeSingle(),
+      supabase
+        .from("catalog_items")
+        .select("id, name, description, unit, unit_price_cents")
+        .eq("active", true)
+        .order("name"),
+      supabase.from("note_line_items").select("id").eq("field_note_id", noteId),
+    ]);
+
+  if (noteError || !note) redirect(messageUrl("/app/notes", "error", "Field note not found."));
+  if (catalogError || itemsError) {
+    redirect(messageUrl(path, "error", catalogError?.message ?? itemsError?.message ?? "Data could not be loaded."));
+  }
+  if (note.status !== "draft") {
+    redirect(messageUrl(path, "error", "Only draft notes can generate AI suggestions."));
+  }
+  if (!catalog.length) {
+    redirect(messageUrl(path, "error", "Add at least one price-book item before using AI."));
+  }
+  if (existingItems.length && formData.get("replace_existing") !== "true") {
+    redirect(messageUrl(path, "error", "Confirm replacement before regenerating line items."));
+  }
+  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
+    redirect(messageUrl(path, "error", "AI Gateway is not configured for this environment yet."));
+  }
+
+  let extraction: Awaited<ReturnType<typeof extractFieldNote>>;
+  try {
+    extraction = await extractFieldNote({ rawNote: note.raw_note, catalog });
+  } catch (error) {
+    console.error("Field-note extraction failed:", error instanceof Error ? error.message : "Unknown error");
+    redirect(messageUrl(path, "error", "AI could not generate suggestions. Your current line items were not changed."));
+  }
+
+  const catalogById = new Map(catalog.map((item) => [item.id, item]));
+  let reviewCount = 0;
+  const generatedItems = extraction.line_items.map((item) => {
+    const match = item.catalog_item_id ? catalogById.get(item.catalog_item_id) : undefined;
+    const confirmedMatch = item.needs_review ? undefined : match;
+    if (item.needs_review || !match) reviewCount += 1;
+
+    return {
+      id: crypto.randomUUID(),
+      field_note_id: noteId,
+      catalog_item_id: confirmedMatch?.id ?? null,
+      description: match?.name ?? item.description,
+      quantity: item.quantity,
+      unit_price_cents: confirmedMatch?.unit_price_cents ?? 0,
+    };
+  });
+
+  const { error: insertError } = await supabase.from("note_line_items").insert(generatedItems);
+  if (insertError) redirect(messageUrl(path, "error", insertError.message));
+
+  if (existingItems.length) {
+    const { error: deleteError } = await supabase
+      .from("note_line_items")
+      .delete()
+      .in("id", existingItems.map((item) => item.id));
+    if (deleteError) {
+      await supabase.from("note_line_items").delete().in("id", generatedItems.map((item) => item.id));
+      redirect(messageUrl(path, "error", deleteError.message));
+    }
+  }
+
+  revalidatePath("/app");
+  revalidatePath("/app/notes");
+  revalidatePath(path);
+  const reviewMessage = reviewCount
+    ? `Generated ${generatedItems.length} suggestions. Check ${reviewCount} flagged ${reviewCount === 1 ? "item" : "items"}.`
+    : `Generated ${generatedItems.length} price-book suggestions.`;
+  redirect(messageUrl(path, "created", reviewMessage));
 }
 
 const reviewLineItemSchema = z.object({
