@@ -8,8 +8,8 @@ their own price list, and creates a PayPal sandbox invoice draft.
 
 ## Planned workflow
 
-1. Record a field note from a phone or desktop browser.
-2. Transcribe the recording.
+1. Record or upload a field note from a phone or desktop browser.
+2. Transcribe the recording with an editable transcript.
 3. Extract services, quantities, customer details, and uncertainties.
 4. Match services against the business-owned price catalog.
 5. Require the owner to review and approve the result.
@@ -65,17 +65,20 @@ owner.
 FieldNote uses Vercel AI Gateway and structured outputs. Vercel deployments
 authenticate with OIDC automatically. For local development, link the Vercel
 project and pull its environment, or set an uncommitted `AI_GATEWAY_API_KEY`.
-The model defaults to `openai/gpt-5.4-mini` and can be changed with
-`AI_GATEWAY_MODEL`.
+The extraction model defaults to `openai/gpt-5.4-mini` and can be changed with
+`AI_GATEWAY_MODEL`. Audio transcription defaults to
+`openai/gpt-4o-mini-transcribe` and can be changed with
+`AI_GATEWAY_TRANSCRIPTION_MODEL`.
 
 ## Current milestone
 
 - Passwordless email authentication and protected workspace
 - Customer and price catalog creation
+- Voice recording, audio upload, and editable transcription
 - Manual field-note drafts
 - AI-generated price-book suggestions with review flags
 - Editable line-item review with price-book matching and approval
 - PayPal Sandbox invoice creation and sending
 - Per-user row-level security
 
-Voice capture and payment-status webhooks are the next milestones.
+Payment-status webhooks are the next milestone.

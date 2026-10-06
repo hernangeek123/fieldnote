@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { extractFieldNote } from "@/lib/ai/extract-field-note";
+import { transcribeFieldNote } from "@/lib/ai/transcribe-field-note";
 import {
   createPayPalDraftInvoice,
   getPayPalInvoice,
@@ -83,6 +84,60 @@ const fieldNoteSchema = z.object({
   occurred_on: z.iso.date(),
   raw_note: z.string().trim().min(1).max(10000),
 });
+
+const MAX_AUDIO_BYTES = 4 * 1024 * 1024;
+const SUPPORTED_AUDIO_TYPES = new Set([
+  "audio/flac",
+  "audio/m4a",
+  "audio/mp4",
+  "audio/mpeg",
+  "audio/ogg",
+  "audio/wav",
+  "audio/webm",
+  "audio/x-m4a",
+  "audio/x-wav",
+  "video/mp4",
+  "video/webm",
+]);
+
+export type AudioTranscriptionResult =
+  | { ok: true; transcript: string }
+  | { ok: false; error: string };
+
+export async function transcribeFieldNoteAudio(
+  formData: FormData,
+): Promise<AudioTranscriptionResult> {
+  await authenticatedClient();
+
+  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
+    return { ok: false, error: "Audio transcription is not configured for this environment yet." };
+  }
+
+  const audio = formData.get("audio");
+  if (!(audio instanceof File) || audio.size === 0) {
+    return { ok: false, error: "Record or choose an audio file first." };
+  }
+  if (audio.size > MAX_AUDIO_BYTES) {
+    return { ok: false, error: "The recording is too large. Keep it under 4 MB." };
+  }
+
+  const mediaType = audio.type.toLowerCase().split(";", 1)[0];
+  if (!SUPPORTED_AUDIO_TYPES.has(mediaType)) {
+    return { ok: false, error: "Use a WebM, MP4, M4A, MP3, WAV, OGG, or FLAC recording." };
+  }
+
+  try {
+    const transcript = await transcribeFieldNote(new Uint8Array(await audio.arrayBuffer()));
+    if (!transcript) return { ok: false, error: "No speech was detected. Try recording again." };
+    if (transcript.length > 10_000) {
+      return { ok: false, error: "The transcript is too long for one field note." };
+    }
+    return { ok: true, transcript };
+  } catch (error) {
+    console.error("Field-note transcription failed:", error instanceof Error ? error.message : "Unknown error");
+    return { ok: false, error: "The recording could not be transcribed. Your audio is still available to retry." };
+  }
+}
 
 export async function createFieldNote(formData: FormData) {
   const parsed = fieldNoteSchema.safeParse(Object.fromEntries(formData));
