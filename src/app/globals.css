@@ -52,3 +52,7 @@ a {
   border-color: #176b3a;
   box-shadow: 0 0 0 2px #cce5d2;
 }
+
+.field-input-prefix {
+  padding-left: 2.25rem;
+}

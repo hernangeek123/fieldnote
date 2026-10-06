@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, BookOpenText, PackageOpen, Users } from "lucide-react";
+import { StatusBadge } from "@/components/status-badge";
 import { createClient } from "@/lib/supabase/server";
 
 function plural(count: number, singular: string) {
@@ -65,18 +66,20 @@ export default async function DashboardPage() {
           {recentNotes.data?.length ? (
             <ul className="divide-y divide-[#e1e5e0]">
               {recentNotes.data.map((note) => (
-                <li key={note.id} className="p-5">
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="font-semibold">
-                      {customers.data?.find((customer) => customer.id === note.customer_id)?.name ??
-                        "No customer"}
+                <li key={note.id}>
+                  <Link href={`/app/notes/${note.id}`} className="block p-5 hover:bg-[#f8faf8]">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-semibold">
+                        {customers.data?.find((customer) => customer.id === note.customer_id)?.name ??
+                          "No customer"}
+                      </p>
+                      <StatusBadge status={note.status} />
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#58625b]">
+                      {note.raw_note}
                     </p>
-                    <span className="text-xs font-medium uppercase text-[#657068]">{note.status}</span>
-                  </div>
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#58625b]">
-                    {note.raw_note}
-                  </p>
-                  <p className="mt-3 text-xs text-[#7a847d]">{note.occurred_on}</p>
+                    <p className="mt-3 text-xs text-[#7a847d]">{note.occurred_on}</p>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -54,6 +54,7 @@ owner.
 - Passwordless email authentication and protected workspace
 - Customer and price catalog creation
 - Manual field-note drafts
+- Editable line-item review with price-book matching and approval
 - Per-user row-level security
 
 Voice capture, AI extraction, and PayPal invoice creation are the next milestones.

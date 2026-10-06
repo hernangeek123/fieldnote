@@ -13,7 +13,7 @@ const navigation = [
   { href: "/app", label: "Overview", icon: LayoutDashboard },
   { href: "/app/customers", label: "Customers", icon: Users },
   { href: "/app/catalog", label: "Price book", icon: PackageOpen },
-  { href: "/app/notes/new", label: "New note", icon: BookOpenText },
+  { href: "/app/notes", label: "Notes", icon: BookOpenText },
 ];
 
 export function AppShell({
