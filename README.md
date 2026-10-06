@@ -37,6 +37,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Real credentials belong in `.env.local` and must never be committed.
 
+## PayPal setup
+
+Create a PayPal Sandbox REST app and set `PAYPAL_CLIENT_ID` and
+`PAYPAL_CLIENT_SECRET` in the server environment. Keep
+`PAYPAL_API_BASE=https://api-m.sandbox.paypal.com` for development and the
+hackathon demo. `PAYPAL_BUSINESS_NAME` controls the merchant name shown on new
+invoice drafts.
+
+FieldNote creates a PayPal draft first. Sending the invoice is a separate,
+confirmed action so creating a draft never emails the customer.
+
 ## Supabase setup
 
 1. Create a dedicated Supabase project for FieldNote.
@@ -64,6 +75,7 @@ The model defaults to `openai/gpt-5.4-mini` and can be changed with
 - Manual field-note drafts
 - AI-generated price-book suggestions with review flags
 - Editable line-item review with price-book matching and approval
+- PayPal Sandbox invoice creation and sending
 - Per-user row-level security
 
-Voice capture and PayPal invoice creation are the next milestones.
+Voice capture and payment-status webhooks are the next milestones.

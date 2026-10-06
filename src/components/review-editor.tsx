@@ -24,6 +24,7 @@ type LineItem = {
 type ReviewEditorProps = {
   noteId: string;
   status: string;
+  paypalInvoiceCreated?: boolean;
   catalog: CatalogItem[];
   initialItems: Array<{
     id: string;
@@ -79,7 +80,13 @@ function ReviewActions({ reviewed }: { reviewed: boolean }) {
   );
 }
 
-export function ReviewEditor({ noteId, status, catalog, initialItems }: ReviewEditorProps) {
+export function ReviewEditor({
+  noteId,
+  status,
+  paypalInvoiceCreated = false,
+  catalog,
+  initialItems,
+}: ReviewEditorProps) {
   const [sequence, setSequence] = useState(initialItems.length + 1);
   const [items, setItems] = useState<LineItem[]>(() =>
     initialItems.length
@@ -93,7 +100,7 @@ export function ReviewEditor({ noteId, status, catalog, initialItems }: ReviewEd
         }))
       : [emptyItem(0)],
   );
-  const locked = status === "invoiced";
+  const locked = status === "invoiced" || paypalInvoiceCreated;
   const reviewed = status === "reviewed" || locked;
   const total = useMemo(
     () =>
@@ -260,7 +267,9 @@ export function ReviewEditor({ noteId, status, catalog, initialItems }: ReviewEd
           <p className="mt-1 text-2xl font-semibold">{money.format(total)}</p>
         </div>
         {locked ? (
-          <p className="text-sm font-medium text-[#657068]">Invoiced notes are locked.</p>
+          <p className="text-sm font-medium text-[#657068]">
+            {status === "invoiced" ? "Invoiced notes are locked." : "PayPal draft created. Line items are locked."}
+          </p>
         ) : (
           <ReviewActions reviewed={reviewed} />
         )}

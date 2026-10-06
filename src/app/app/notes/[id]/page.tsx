@@ -3,8 +3,10 @@ import { ArrowLeft, CalendarDays, Mail, MapPin, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AiGenerateButton } from "@/components/ai-generate-button";
 import { Notice } from "@/components/notice";
+import { PayPalInvoicePanel } from "@/components/paypal-invoice-panel";
 import { ReviewEditor } from "@/components/review-editor";
 import { StatusBadge } from "@/components/status-badge";
+import { isPayPalConfigured } from "@/lib/paypal/client";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = {
@@ -25,7 +27,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
     .maybeSingle();
   if (!note) notFound();
 
-  const [customerResult, lineItemsResult, catalogResult] = await Promise.all([
+  const [customerResult, lineItemsResult, catalogResult, paypalInvoiceResult] = await Promise.all([
     note.customer_id
       ? supabase.from("customers").select("id, name, email, phone, address").eq("id", note.customer_id).maybeSingle()
       : Promise.resolve({ data: null }),
@@ -39,8 +41,14 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
       .select("id, name, unit, unit_price_cents")
       .eq("active", true)
       .order("name"),
+    supabase
+      .from("paypal_invoices")
+      .select("paypal_invoice_id, invoice_number, status, recipient_view_url, invoicer_view_url, last_error")
+      .eq("field_note_id", id)
+      .maybeSingle(),
   ]);
   const customer = customerResult.data;
+  const paypalInvoice = paypalInvoiceResult.data;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -75,6 +83,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
             status={note.status}
             catalog={catalogResult.data ?? []}
             initialItems={lineItemsResult.data ?? []}
+            paypalInvoiceCreated={Boolean(paypalInvoice?.paypal_invoice_id)}
           />
 
           <section className="rounded-md border border-[#d7ddd7] bg-white p-5 sm:p-6">
@@ -97,6 +106,13 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
               <p className="mt-4 text-sm text-[#657068]">No customer selected.</p>
             )}
           </section>
+          <PayPalInvoicePanel
+            noteId={note.id}
+            noteStatus={note.status}
+            customerEmail={customer?.email ?? null}
+            configured={isPayPalConfigured()}
+            invoice={paypalInvoice}
+          />
         </aside>
       </div>
     </div>

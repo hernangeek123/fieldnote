@@ -172,6 +172,62 @@ export type Database = {
           },
         ]
       }
+      paypal_invoices: {
+        Row: {
+          create_request_id: string
+          created_at: string
+          field_note_id: string
+          id: string
+          invoice_number: string | null
+          invoicer_view_url: string | null
+          last_error: string | null
+          owner_id: string
+          paypal_invoice_id: string | null
+          recipient_view_url: string | null
+          send_request_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          create_request_id?: string
+          created_at?: string
+          field_note_id: string
+          id?: string
+          invoice_number?: string | null
+          invoicer_view_url?: string | null
+          last_error?: string | null
+          owner_id?: string
+          paypal_invoice_id?: string | null
+          recipient_view_url?: string | null
+          send_request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          create_request_id?: string
+          created_at?: string
+          field_note_id?: string
+          id?: string
+          invoice_number?: string | null
+          invoicer_view_url?: string | null
+          last_error?: string | null
+          owner_id?: string
+          paypal_invoice_id?: string | null
+          recipient_view_url?: string | null
+          send_request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paypal_invoices_field_note_id_fkey"
+            columns: ["field_note_id"]
+            isOneToOne: true
+            referencedRelation: "field_notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

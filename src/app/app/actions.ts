@@ -4,6 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { extractFieldNote } from "@/lib/ai/extract-field-note";
+import {
+  createPayPalDraftInvoice,
+  getPayPalInvoice,
+  isPayPalConfigured,
+  payPalDebugId,
+  payPalErrorMessage,
+  sendPayPalInvoice,
+} from "@/lib/paypal/client";
 import { createClient } from "@/lib/supabase/server";
 
 function messageUrl(path: string, type: "created" | "error", message: string) {
@@ -171,6 +179,195 @@ export async function generateFieldNoteLineItems(noteId: string, formData: FormD
     ? `Generated ${generatedItems.length} suggestions. Check ${reviewCount} flagged ${reviewCount === 1 ? "item" : "items"}.`
     : `Generated ${generatedItems.length} price-book suggestions.`;
   redirect(messageUrl(path, "created", reviewMessage));
+}
+
+const paypalInvoiceColumns = "id, paypal_invoice_id, status, create_request_id, send_request_id";
+
+function paypalInvoiceUpdate(invoice: Awaited<ReturnType<typeof getPayPalInvoice>>) {
+  return {
+    paypal_invoice_id: invoice.id,
+    invoice_number: invoice.detail?.invoice_number ?? null,
+    status: invoice.status.toUpperCase(),
+    recipient_view_url: invoice.detail?.metadata?.recipient_view_url ?? null,
+    invoicer_view_url: invoice.detail?.metadata?.invoicer_view_url ?? null,
+    last_error: null,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+export async function createPayPalInvoice(noteId: string) {
+  const path = `/app/notes/${noteId}`;
+  if (!isPayPalConfigured()) {
+    redirect(messageUrl(path, "error", "PayPal Sandbox is not configured yet."));
+  }
+
+  const supabase = await authenticatedClient();
+  const { data: note, error: noteError } = await supabase
+    .from("field_notes")
+    .select("id, customer_id, status")
+    .eq("id", noteId)
+    .maybeSingle();
+
+  if (noteError || !note) redirect(messageUrl("/app/notes", "error", "Field note not found."));
+  if (note.status !== "reviewed") {
+    redirect(messageUrl(path, "error", "Approve the field note before creating an invoice."));
+  }
+  if (!note.customer_id) {
+    redirect(messageUrl(path, "error", "Choose a customer before creating an invoice."));
+  }
+
+  const [customerResult, itemsResult, invoiceResult] = await Promise.all([
+    supabase.from("customers").select("name, email").eq("id", note.customer_id).maybeSingle(),
+    supabase
+      .from("note_line_items")
+      .select("description, quantity, unit_price_cents")
+      .eq("field_note_id", noteId)
+      .order("created_at"),
+    supabase.from("paypal_invoices").select(paypalInvoiceColumns).eq("field_note_id", noteId).maybeSingle(),
+  ]);
+
+  if (customerResult.error || !customerResult.data) {
+    redirect(messageUrl(path, "error", "The invoice customer could not be loaded."));
+  }
+  if (!customerResult.data.email || !z.email().safeParse(customerResult.data.email).success) {
+    redirect(messageUrl(path, "error", "Add a valid customer email before creating an invoice."));
+  }
+  if (itemsResult.error || !itemsResult.data.length) {
+    redirect(messageUrl(path, "error", "Add at least one line item before creating an invoice."));
+  }
+  if (itemsResult.data.some((item) => item.unit_price_cents <= 0)) {
+    redirect(messageUrl(path, "error", "Every invoice item needs a price greater than zero."));
+  }
+  if (invoiceResult.error) redirect(messageUrl(path, "error", invoiceResult.error.message));
+  if (invoiceResult.data?.paypal_invoice_id) {
+    redirect(messageUrl(path, "created", "A PayPal invoice already exists for this note."));
+  }
+
+  let invoiceRecord = invoiceResult.data;
+  if (!invoiceRecord) {
+    const { data, error } = await supabase
+      .from("paypal_invoices")
+      .insert({ field_note_id: noteId })
+      .select(paypalInvoiceColumns)
+      .single();
+    if (error || !data) redirect(messageUrl(path, "error", error?.message ?? "Invoice setup failed."));
+    invoiceRecord = data;
+  } else {
+    const { error } = await supabase
+      .from("paypal_invoices")
+      .update({ status: "CREATING", last_error: null, updated_at: new Date().toISOString() })
+      .eq("id", invoiceRecord.id);
+    if (error) redirect(messageUrl(path, "error", error.message));
+  }
+
+  let paypalInvoice: Awaited<ReturnType<typeof createPayPalDraftInvoice>>;
+  try {
+    paypalInvoice = await createPayPalDraftInvoice({
+      requestId: invoiceRecord.create_request_id,
+      fieldNoteId: noteId,
+      customer: {
+        name: customerResult.data.name,
+        email: customerResult.data.email,
+      },
+      items: itemsResult.data.map((item) => ({
+        description: item.description,
+        quantity: Number(item.quantity),
+        unitPriceCents: item.unit_price_cents,
+      })),
+    });
+  } catch (error) {
+    const message = payPalErrorMessage(error);
+    console.error("PayPal invoice creation failed", { debugId: payPalDebugId(error) });
+    await supabase
+      .from("paypal_invoices")
+      .update({ status: "FAILED", last_error: message, updated_at: new Date().toISOString() })
+      .eq("id", invoiceRecord.id);
+    redirect(messageUrl(path, "error", message));
+  }
+
+  const { error: saveError } = await supabase
+    .from("paypal_invoices")
+    .update(paypalInvoiceUpdate(paypalInvoice))
+    .eq("id", invoiceRecord.id);
+  if (saveError) {
+    redirect(messageUrl(path, "error", "The PayPal draft was created, but FieldNote could not save it. Retry safely."));
+  }
+
+  revalidatePath("/app");
+  revalidatePath("/app/notes");
+  revalidatePath(path);
+  redirect(messageUrl(path, "created", "PayPal draft created. Review it before sending."));
+}
+
+export async function sendFieldNoteInvoice(noteId: string) {
+  const path = `/app/notes/${noteId}`;
+  if (!isPayPalConfigured()) {
+    redirect(messageUrl(path, "error", "PayPal Sandbox is not configured yet."));
+  }
+
+  const supabase = await authenticatedClient();
+  const [{ data: note, error: noteError }, { data: invoiceRecord, error: invoiceError }] = await Promise.all([
+    supabase.from("field_notes").select("id, status").eq("id", noteId).maybeSingle(),
+    supabase.from("paypal_invoices").select(paypalInvoiceColumns).eq("field_note_id", noteId).maybeSingle(),
+  ]);
+
+  if (noteError || !note) redirect(messageUrl("/app/notes", "error", "Field note not found."));
+  if (invoiceError || !invoiceRecord?.paypal_invoice_id) {
+    redirect(messageUrl(path, "error", "Create the PayPal draft before sending it."));
+  }
+
+  if (invoiceRecord.status !== "DRAFT") {
+    if (note.status !== "invoiced") {
+      const { error } = await supabase
+        .from("field_notes")
+        .update({ status: "invoiced", updated_at: new Date().toISOString() })
+        .eq("id", noteId);
+      if (error) redirect(messageUrl(path, "error", error.message));
+    }
+    redirect(messageUrl(path, "created", "This PayPal invoice has already been sent."));
+  }
+
+  let invoiceDetails: Awaited<ReturnType<typeof getPayPalInvoice>> | null = null;
+  let sendError: unknown;
+  try {
+    await sendPayPalInvoice(invoiceRecord.paypal_invoice_id, invoiceRecord.send_request_id);
+    invoiceDetails = await getPayPalInvoice(invoiceRecord.paypal_invoice_id);
+  } catch (error) {
+    sendError = error;
+    try {
+      const current = await getPayPalInvoice(invoiceRecord.paypal_invoice_id);
+      if (current.status !== "DRAFT") invoiceDetails = current;
+    } catch {
+      // The original PayPal error is more useful than a follow-up status error.
+    }
+  }
+
+  if (!invoiceDetails) {
+    const message = payPalErrorMessage(sendError);
+    console.error("PayPal invoice send failed", { debugId: payPalDebugId(sendError) });
+    await supabase
+      .from("paypal_invoices")
+      .update({ last_error: message, updated_at: new Date().toISOString() })
+      .eq("id", invoiceRecord.id);
+    redirect(messageUrl(path, "error", message));
+  }
+
+  const { error: invoiceUpdateError } = await supabase
+    .from("paypal_invoices")
+    .update(paypalInvoiceUpdate(invoiceDetails))
+    .eq("id", invoiceRecord.id);
+  if (invoiceUpdateError) redirect(messageUrl(path, "error", invoiceUpdateError.message));
+
+  const { error: noteUpdateError } = await supabase
+    .from("field_notes")
+    .update({ status: "invoiced", updated_at: new Date().toISOString() })
+    .eq("id", noteId);
+  if (noteUpdateError) redirect(messageUrl(path, "error", noteUpdateError.message));
+
+  revalidatePath("/app");
+  revalidatePath("/app/notes");
+  revalidatePath(path);
+  redirect(messageUrl(path, "created", "Invoice sent through PayPal Sandbox."));
 }
 
 const reviewLineItemSchema = z.object({
