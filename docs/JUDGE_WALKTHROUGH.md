@@ -125,4 +125,6 @@ above intentionally remain unchecked.
 Invoice safeguards and status-sync implementation checks: 16 local regression
 tests, rollback-only database checks, lint, TypeScript, and the production build
 passed. Browser control remained unavailable, so authenticated end-to-end flows
-and real Sandbox webhook delivery still require verification after deployment.
+and real Sandbox webhook delivery still require verification. The implementation
+is now deployed and its Sandbox webhook is configured; hosted HTTP checks passed.
+See `INVOICE_STATUS_SYNC.md` for the deployment and temporary-draft test record.

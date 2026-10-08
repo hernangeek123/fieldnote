@@ -52,6 +52,26 @@ events from the registered app's actual Sandbox invoices.
 
 ## Verification
 
+### Hosted Setup Record
+
+October 7, 2026 (Eastern): implementation commit `d810d83` was pushed to the private
+repository and its production deployment reached READY at
+`https://fieldnote-lime.vercel.app`. The Sandbox REST app has a webhook registered
+at `/api/paypal/webhook` for all nine available invoice event types. Its webhook
+ID and the Supabase secret key are stored as server-only production secrets.
+
+Production checks confirmed HTTP 200 for login, an unauthenticated redirect for
+the customer page, HTTP 405 for webhook GET, and HTTP 401 for an unsigned invoice
+event. No production runtime errors were returned by the deployment-scoped log
+check, although no webhook delivery logs were available.
+
+A temporary unsent Sandbox draft was created and updated with both email
+notifications disabled. PayPal's event listing returned no notification for it
+during this check. The draft was deleted (HTTP 204), and its subsequent lookup
+returned HTTP 404. Existing FieldNote invoices were unchanged. Actual signed
+delivery, financial-status synchronization, redelivery, and the authenticated
+browser flow remain unverified. No invoice email was sent or payment taken.
+
 Run:
 
 ```bash
