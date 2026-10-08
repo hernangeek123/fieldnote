@@ -27,19 +27,22 @@ const invoiceReferenceSchema = z.object({ href: z.url() });
 
 export type PayPalInvoice = z.infer<typeof invoiceSchema>;
 
-type DraftInvoiceInput = {
-  requestId: string;
-  fieldNoteId: string;
-  customer: {
-    name: string;
-    email: string;
-  };
-  items: Array<{
-    description: string;
-    quantity: number;
-    unitPriceCents: number;
-  }>;
-};
+export const draftPayloadSchema = z.object({
+  detail: z.object({
+    currency_code: z.literal("USD"), invoice_date: z.iso.date(),
+    invoice_number: z.string().min(1).max(25), reference: z.string(), note: z.string(),
+    payment_term: z.object({ term_type: z.literal("DUE_ON_RECEIPT") }),
+  }),
+  invoicer: z.object({ business_name: z.string().min(1).max(100) }),
+  primary_recipients: z.array(z.object({ billing_info: z.object({
+    business_name: z.string(), email_address: z.email(),
+  }) })).length(1),
+  items: z.array(z.object({
+    name: z.string().min(1).max(200), quantity: z.string().regex(/^\d+(\.\d{1,5})?$/),
+    unit_amount: z.object({ currency_code: z.literal("USD"), value: z.string().regex(/^\d+\.\d{2}$/) }),
+    unit_of_measure: z.literal("QUANTITY"),
+  })).min(1).max(100),
+});
 
 type CachedToken = {
   value: string;
@@ -98,6 +101,7 @@ async function accessToken() {
     },
     body: new URLSearchParams({ grant_type: "client_credentials" }),
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) throw await errorFromResponse(response);
@@ -122,54 +126,38 @@ async function paypalFetch(path: string, init: RequestInit, requestId?: string) 
       ...init.headers,
     },
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) throw await errorFromResponse(response);
   return response;
 }
 
-function decimalQuantity(quantity: number) {
-  return quantity.toFixed(5).replace(/\.?0+$/, "");
-}
-
-export async function createPayPalDraftInvoice(input: DraftInvoiceInput) {
-  const response = await paypalFetch(
-    "/v2/invoicing/invoices",
-    {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: JSON.stringify({
-        detail: {
-          currency_code: "USD",
-          invoice_date: new Date().toISOString().slice(0, 10),
-          reference: `FieldNote ${input.fieldNoteId.slice(0, 8)}`,
-          note: "Thank you for your business.",
-          payment_term: { term_type: "DUE_ON_RECEIPT" },
-        },
-        invoicer: {
-          business_name: process.env.PAYPAL_BUSINESS_NAME?.trim() || "FieldNote Services",
-        },
-        primary_recipients: [
-          {
-            billing_info: {
-              business_name: input.customer.name,
-              email_address: input.customer.email,
-            },
-          },
-        ],
-        items: input.items.map((item) => ({
-          name: item.description.slice(0, 200),
-          quantity: decimalQuantity(item.quantity),
-          unit_amount: {
-            currency_code: "USD",
-            value: (item.unitPriceCents / 100).toFixed(2),
-          },
-          unit_of_measure: "QUANTITY",
-        })),
-      }),
-    },
-    input.requestId,
-  );
+export async function createPayPalDraftInvoice(input: { requestId: string; payload: unknown }) {
+  const draft = draftPayloadSchema.parse(input.payload);
+  let response: Response;
+  try {
+    response = await paypalFetch(
+      "/v2/invoicing/invoices",
+      {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify(draft),
+      },
+      input.requestId,
+    );
+  } catch (error) {
+    // Invoice numbers also protect retries after PayPal's request-ID retention expires.
+    if (error instanceof PayPalApiError && error.status === 422) {
+      const search = await paypalFetch("/v2/invoicing/search-invoices", {
+        method: "POST", body: JSON.stringify({ invoice_number: draft.detail.invoice_number }),
+      });
+      const result = z.object({ items: z.array(invoiceSchema).optional() }).parse(await search.json());
+      const existing = result.items?.find((invoice) => invoice.detail?.invoice_number === draft.detail.invoice_number);
+      if (existing) return getPayPalInvoice(existing.id);
+    }
+    throw error;
+  }
 
   const payload: unknown = await response.json();
   const invoice = invoiceSchema.safeParse(payload);
@@ -198,6 +186,28 @@ export async function getPayPalInvoice(invoiceId: string) {
     { method: "GET" },
   );
   return invoiceSchema.parse(await response.json());
+}
+
+export async function verifyPayPalWebhook(headers: Headers, event: unknown) {
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID?.trim();
+  if (!webhookId) throw new Error("PayPal webhook is not configured.");
+  const transmissionId = headers.get("paypal-transmission-id");
+  const transmissionTime = headers.get("paypal-transmission-time");
+  const transmissionSig = headers.get("paypal-transmission-sig");
+  const certUrl = headers.get("paypal-cert-url");
+  const authAlgo = headers.get("paypal-auth-algo");
+  if (!transmissionId || !transmissionTime || !transmissionSig || !certUrl || !authAlgo) return false;
+  const cert = URL.canParse(certUrl) ? new URL(certUrl) : null;
+  if (!cert || cert.protocol !== "https:" || cert.username || cert.password || cert.port
+    || !["api.paypal.com", "api.sandbox.paypal.com", "api-m.paypal.com", "api-m.sandbox.paypal.com"].includes(cert.hostname)
+    || !cert.pathname.startsWith("/v1/notifications/certs/")) return false;
+  const response = await paypalFetch("/v1/notifications/verify-webhook-signature", {
+    method: "POST", body: JSON.stringify({ transmission_id: transmissionId,
+      transmission_time: transmissionTime, transmission_sig: transmissionSig,
+      cert_url: certUrl, auth_algo: authAlgo, webhook_id: webhookId, webhook_event: event }),
+  });
+  const result = z.object({ verification_status: z.enum(["SUCCESS", "FAILURE"]) }).parse(await response.json());
+  return result.verification_status === "SUCCESS";
 }
 
 export function payPalErrorMessage(error: unknown) {

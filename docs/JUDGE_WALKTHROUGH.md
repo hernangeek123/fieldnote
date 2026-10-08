@@ -93,8 +93,10 @@ again and confirm. Verify the invoice's resulting status in PayPal and the
 note's invoiced state in FieldNote.
 
 Sending invokes PayPal's Sandbox delivery flow. Do not present this as a real
-customer receiving a live invoice. Paid-status synchronization is not currently
-implemented; inspect payment results in PayPal if testing Sandbox payment.
+customer receiving a live invoice. Automatic payment-status updates require a
+configured and verified webhook. Use **Refresh
+status** to reconcile the invoice manually, and inspect payment results in PayPal
+if testing Sandbox payment.
 
 ## Acceptance Record
 
@@ -114,8 +116,13 @@ evidence. Do not include email links, access tokens, passwords, or customer PII.
 - [ ] A second account cannot view the first account's records.
 - [ ] Desktop and mobile views are usable without clipped controls.
 
-Current verification status, October 7, 2026: production deployment was reported
+Prior verification run, October 7, 2026: production deployment was reported
 READY, and a connector fetch of the sign-in page returned HTTP 200. Local terminal
 and browser-control startup failed, so this session did not execute the complete
 workflow, verify new-tester email delivery, or create/send an invoice. The boxes
 above intentionally remain unchecked.
+
+Invoice safeguards and status-sync implementation checks: 16 local regression
+tests, rollback-only database checks, lint, TypeScript, and the production build
+passed. Browser control remained unavailable, so authenticated end-to-end flows
+and real Sandbox webhook delivery still require verification after deployment.

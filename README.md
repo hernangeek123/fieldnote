@@ -24,6 +24,11 @@ catalog, not from the model.
 Creating a draft does not send it. The hackathon deployment uses PayPal Sandbox,
 not real-money payments.
 
+Invoice creation freezes the reviewed data for stable retries. Saving changes
+before creation returns the note to draft so it must be approved again. Invoice
+status can be refreshed from PayPal; automatic updates require the
+[webhook setup](docs/INVOICE_STATUS_SYNC.md).
+
 ## Try the demo
 
 Open the [sign-in page](https://fieldnote-lime.vercel.app/login). Authentication
@@ -77,6 +82,8 @@ private, cloning requires repository access.
 | `PAYPAL_CLIENT_SECRET` | Sandbox REST app secret; server only |
 | `PAYPAL_API_BASE` | Keep `https://api-m.sandbox.paypal.com` |
 | `PAYPAL_BUSINESS_NAME` | Merchant name on draft invoices |
+| `PAYPAL_WEBHOOK_ID` | Optional registered Sandbox webhook ID for automatic status updates |
+| `SUPABASE_SECRET_KEY` | Optional server-only Supabase secret key for verified webhook writes |
 | `AI_GATEWAY_API_KEY` | Local AI Gateway authentication, unless using Vercel OIDC |
 | `AI_GATEWAY_MODEL` | Extraction model; defaults to `openai/gpt-5.4-mini` |
 | `AI_GATEWAY_TRANSCRIPTION_MODEL` | Defaults to `openai/gpt-4o-mini-transcribe` |
@@ -90,7 +97,8 @@ keys. Only the Supabase project URL, publishable key, and site URL use the
 
 1. Create a dedicated project and enable email sign-in.
 2. Apply all SQL files in [supabase/migrations](supabase/migrations) in filename
-   order: foundation, foreign-key indexes, then PayPal invoices.
+   order: foundation, foreign-key indexes, PayPal invoices, then invoice safeguards
+   and status sync.
 3. Set the project URL and publishable key in your environment.
 4. Set the Auth site URL to your app origin and allow
    `http://localhost:3000/auth/callback` for local development.
@@ -134,22 +142,29 @@ Verify sign-in before running the invoice walkthrough.
 ## Checks
 
 ```bash
+npm test
 npm run lint
 npx tsc --noEmit
 npm run build
 ```
 
-There is currently no automated end-to-end test suite. Use the walkthrough for
-production acceptance testing; successful deployment alone does not establish
-that authentication, AI, and PayPal work together.
+Automated regression tests cover invoice retries, send reconciliation, signature
+verification, and webhook failure handling. The rollback-only database checks are
+in `tests/invoice-database.sql`; run them as the database owner on a test project
+with at least one Auth user. There is currently no browser end-to-end test suite.
+Use the walkthrough for production acceptance testing; successful deployment
+alone does not establish that authentication, AI, and PayPal work together.
 
 ## Current limits
 
 - USD invoices; no tax, discount, or multi-currency interface.
 - Browser recordings stop at two minutes; audio uploads must be at most 4 MB.
 - AI output can be uncertain and always needs owner review.
-- Sending is supported, but payment-status webhooks and automatic paid-status
-  updates are not implemented.
+- Automatic invoice-status updates require a registered webhook and server-side
+  configuration. The webhook implementation has regression coverage but still
+  needs a real Sandbox delivery test after deployment.
+- A creation attempt freezes its data, including failed or ambiguous attempts.
+  Create a new note if the invoice details need correction.
 - Shared judge accounts, one-click sample-data provisioning, and general email
   delivery readiness have not yet been verified for submission.
 

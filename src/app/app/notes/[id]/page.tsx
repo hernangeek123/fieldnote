@@ -43,7 +43,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
       .order("name"),
     supabase
       .from("paypal_invoices")
-      .select("paypal_invoice_id, invoice_number, status, recipient_view_url, invoicer_view_url, last_error")
+      .select("paypal_invoice_id, invoice_number, status, recipient_view_url, invoicer_view_url, last_error, last_synced_at")
       .eq("field_note_id", id)
       .maybeSingle(),
   ]);
@@ -83,7 +83,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
             status={note.status}
             catalog={catalogResult.data ?? []}
             initialItems={lineItemsResult.data ?? []}
-            paypalInvoiceCreated={Boolean(paypalInvoice?.paypal_invoice_id)}
+            paypalInvoiceCreated={Boolean(paypalInvoice)}
           />
 
           <section className="rounded-md border border-[#d7ddd7] bg-white p-5 sm:p-6">

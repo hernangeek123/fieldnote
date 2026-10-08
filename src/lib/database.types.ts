@@ -176,11 +176,15 @@ export type Database = {
         Row: {
           create_request_id: string
           created_at: string
+          draft_payload: Json | null
           field_note_id: string
           id: string
           invoice_number: string | null
           invoicer_view_url: string | null
           last_error: string | null
+          last_synced_at: string | null
+          operation_started_at: string | null
+          operation_token: string | null
           owner_id: string
           paypal_invoice_id: string | null
           recipient_view_url: string | null
@@ -191,11 +195,15 @@ export type Database = {
         Insert: {
           create_request_id?: string
           created_at?: string
+          draft_payload?: Json | null
           field_note_id: string
           id?: string
           invoice_number?: string | null
           invoicer_view_url?: string | null
           last_error?: string | null
+          last_synced_at?: string | null
+          operation_started_at?: string | null
+          operation_token?: string | null
           owner_id?: string
           paypal_invoice_id?: string | null
           recipient_view_url?: string | null
@@ -206,11 +214,15 @@ export type Database = {
         Update: {
           create_request_id?: string
           created_at?: string
+          draft_payload?: Json | null
           field_note_id?: string
           id?: string
           invoice_number?: string | null
           invoicer_view_url?: string | null
           last_error?: string | null
+          last_synced_at?: string | null
+          operation_started_at?: string | null
+          operation_token?: string | null
           owner_id?: string
           paypal_invoice_id?: string | null
           recipient_view_url?: string | null
@@ -233,7 +245,48 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reserve_paypal_invoice: {
+        Args: { p_business_name: string; p_note_id: string }
+        Returns: {
+          create_request_id: string
+          created_at: string
+          draft_payload: Json | null
+          field_note_id: string
+          id: string
+          invoice_number: string | null
+          invoicer_view_url: string | null
+          last_error: string | null
+          last_synced_at: string | null
+          operation_started_at: string | null
+          operation_token: string | null
+          owner_id: string
+          paypal_invoice_id: string | null
+          recipient_view_url: string | null
+          send_request_id: string
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "paypal_invoices"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      save_note_review: {
+        Args: { p_approve: boolean; p_items: Json; p_note_id: string }
+        Returns: undefined
+      }
+      sync_paypal_invoice: {
+        Args: {
+          p_details: Json
+          p_event_id?: string
+          p_event_type?: string
+          p_invoice_id: string
+          p_observed_at: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

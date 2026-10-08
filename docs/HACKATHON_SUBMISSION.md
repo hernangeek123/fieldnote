@@ -54,4 +54,5 @@ creation and confirmed sending. The submission should show both integrations.
 
 Do not claim live payments, automatic paid-status updates, measured time savings,
 or broad customer adoption that the current build and evidence do not support.
-Payment-status webhooks are future work.
+Invoice-status syncing is implemented but needs deployment, webhook configuration,
+and a real Sandbox delivery test before it can be presented as verified.

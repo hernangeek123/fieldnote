@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { AlertTriangle, Check, Plus, Save, Trash2 } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { saveFieldNoteReview } from "@/app/app/actions";
+import { isInvoiceLocked } from "@/lib/paypal/invoice-state";
 
 type CatalogItem = {
   id: string;
@@ -100,7 +101,7 @@ export function ReviewEditor({
         }))
       : [emptyItem(0)],
   );
-  const locked = status === "invoiced" || paypalInvoiceCreated;
+  const locked = isInvoiceLocked(status, paypalInvoiceCreated);
   const reviewed = status === "reviewed" || locked;
   const total = useMemo(
     () =>
@@ -268,7 +269,7 @@ export function ReviewEditor({
         </div>
         {locked ? (
           <p className="text-sm font-medium text-[#657068]">
-            {status === "invoiced" ? "Invoiced notes are locked." : "PayPal draft created. Line items are locked."}
+            {status === "invoiced" ? "Invoiced notes are locked." : "Invoice creation started. Line items are locked."}
           </p>
         ) : (
           <ReviewActions reviewed={reviewed} />

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BookOpenText, Plus } from "lucide-react";
 import { Notice } from "@/components/notice";
-import { StatusBadge } from "@/components/status-badge";
+import { InvoiceStatusBadge, StatusBadge } from "@/components/status-badge";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -19,14 +19,18 @@ export default async function NotesPage({ searchParams }: PageProps) {
 
   const customerIds = [...new Set((notes ?? []).map((note) => note.customer_id).filter(Boolean))] as string[];
   const noteIds = (notes ?? []).map((note) => note.id);
-  const [customersResult, lineItemsResult] = await Promise.all([
+  const [customersResult, lineItemsResult, invoicesResult] = await Promise.all([
     customerIds.length
       ? supabase.from("customers").select("id, name").in("id", customerIds)
       : Promise.resolve({ data: [] as Array<{ id: string; name: string }> }),
     noteIds.length
       ? supabase.from("note_line_items").select("field_note_id, quantity, unit_price_cents").in("field_note_id", noteIds)
       : Promise.resolve({ data: [] as Array<{ field_note_id: string; quantity: number; unit_price_cents: number }> }),
+    noteIds.length
+      ? supabase.from("paypal_invoices").select("field_note_id, status").in("field_note_id", noteIds)
+      : Promise.resolve({ data: [] as Array<{ field_note_id: string; status: string }> }),
   ]);
+  const invoiceStatuses = new Map(invoicesResult.data?.map((invoice) => [invoice.field_note_id, invoice.status]));
   const customerNames = new Map(customersResult.data?.map((customer) => [customer.id, customer.name]));
   const totals = new Map<string, number>();
   lineItemsResult.data?.forEach((item) => {
@@ -67,6 +71,7 @@ export default async function NotesPage({ searchParams }: PageProps) {
                           {note.customer_id ? customerNames.get(note.customer_id) ?? "Unknown customer" : "No customer"}
                         </h2>
                         <StatusBadge status={note.status} />
+                        {invoiceStatuses.has(note.id) ? <InvoiceStatusBadge status={invoiceStatuses.get(note.id)!} /> : null}
                       </div>
                       <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#58625b]">{note.raw_note}</p>
                       <p className="mt-3 text-xs text-[#7a847d]">

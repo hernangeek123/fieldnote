@@ -1,8 +1,10 @@
 "use client";
 
-import { ExternalLink, ReceiptText, Send } from "lucide-react";
+import { ExternalLink, ReceiptText, RefreshCw, Send } from "lucide-react";
 import { useFormStatus } from "react-dom";
-import { createPayPalInvoice, sendFieldNoteInvoice } from "@/app/app/actions";
+import { createPayPalInvoice, refreshFieldNoteInvoice, sendFieldNoteInvoice } from "@/app/app/actions";
+import { canSendInvoice } from "@/lib/paypal/invoice-state";
+import { InvoiceStatusBadge } from "@/components/status-badge";
 
 type Invoice = {
   paypal_invoice_id: string | null;
@@ -11,14 +13,15 @@ type Invoice = {
   recipient_view_url: string | null;
   invoicer_view_url: string | null;
   last_error: string | null;
+  last_synced_at: string | null;
 };
 
-function ActionButton({ kind, retry = false }: { kind: "create" | "send"; retry?: boolean }) {
+function ActionButton({ kind, retry = false }: { kind: "create" | "send" | "refresh"; retry?: boolean }) {
   const { pending } = useFormStatus();
-  const Icon = kind === "create" ? ReceiptText : Send;
+  const Icon = kind === "create" ? ReceiptText : kind === "refresh" ? RefreshCw : Send;
   const label = kind === "create"
     ? retry ? "Retry PayPal draft" : "Create PayPal draft"
-    : "Send invoice";
+    : kind === "refresh" ? "Refresh status" : "Send invoice";
 
   return (
     <button
@@ -27,13 +30,9 @@ function ActionButton({ kind, retry = false }: { kind: "create" | "send"; retry?
       className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#176b3a] px-3 text-sm font-semibold text-white hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
     >
       <Icon size={16} aria-hidden="true" />
-      {pending ? kind === "create" ? "Creating..." : "Sending..." : label}
+      {pending ? kind === "create" ? "Creating..." : kind === "refresh" ? "Refreshing..." : "Sending..." : label}
     </button>
   );
-}
-
-function statusLabel(status: string) {
-  return status.toLowerCase().replaceAll("_", " ");
 }
 
 export function PayPalInvoicePanel({
@@ -51,17 +50,16 @@ export function PayPalInvoicePanel({
 }) {
   const createAction = createPayPalInvoice.bind(null, noteId);
   const sendAction = sendFieldNoteInvoice.bind(null, noteId);
+  const refreshAction = refreshFieldNoteInvoice.bind(null, noteId);
   const canCreate = noteStatus === "reviewed" && !invoice?.paypal_invoice_id;
-  const canSend = invoice?.status === "DRAFT" && Boolean(invoice.paypal_invoice_id);
+  const canSend = invoice && canSendInvoice(invoice.status) && Boolean(invoice.paypal_invoice_id);
 
   return (
     <section className="mt-6 border-t border-[#cfd6cf] pt-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold uppercase text-[#657068]">PayPal invoice</h2>
         {invoice ? (
-          <span className="rounded-md bg-[#e8eef7] px-2 py-1 text-xs font-semibold capitalize text-[#27527a]">
-            {statusLabel(invoice.status)}
-          </span>
+          <InvoiceStatusBadge status={invoice.status} />
         ) : null}
       </div>
 
@@ -70,6 +68,7 @@ export function PayPalInvoicePanel({
       ) : null}
       {customerEmail ? <p className="mt-2 break-all text-sm text-[#657068]">{customerEmail}</p> : null}
       {invoice?.last_error ? <p className="mt-3 text-sm leading-6 text-[#9a3f34]">{invoice.last_error}</p> : null}
+      {invoice?.last_synced_at ? <p className="mt-2 text-xs text-[#657068]">Updated {new Date(invoice.last_synced_at).toLocaleString("en-US", { timeZone: "UTC" })} UTC</p> : null}
 
       {!configured ? (
         <p className="mt-3 text-sm leading-6 text-[#657068]">PayPal Sandbox credentials are not configured.</p>
@@ -79,6 +78,9 @@ export function PayPalInvoicePanel({
       ) : null}
 
       <div className="mt-4 space-y-2">
+        {configured && invoice?.paypal_invoice_id ? (
+          <form action={refreshAction}><ActionButton kind="refresh" /></form>
+        ) : null}
         {configured && canCreate ? (
           <form action={createAction}>
             <ActionButton kind="create" retry={Boolean(invoice)} />
