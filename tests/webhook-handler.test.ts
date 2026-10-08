@@ -51,3 +51,33 @@ test("database failures return a retryable error instead of acknowledging lost u
   const response = await handlePayPalWebhook(request(), { ...dependencies(), syncInvoice: async () => { throw new Error("database unavailable"); } });
   assert.equal(response.status, 503);
 });
+
+test("real nested invoice events preserve the signed body and reconcile current status", async () => {
+  const nested = { ...event, resource: { invoice: { id: "INV2-TEST", status: "PAID", extra: "preserved" } } };
+  let synced = false;
+  const response = await handlePayPalWebhook(request(nested), { ...dependencies(),
+    verify: async (_headers, original) => { assert.deepEqual(original, nested); return true; },
+    findInvoice: async (id) => { assert.equal(id, "INV2-TEST"); return { id: "local-id" }; },
+    getInvoice: async (id) => { assert.equal(id, "INV2-TEST"); return { id, status: "PARTIALLY_PAID" }; },
+    syncInvoice: async (_id, invoice, _observedAt, eventId) => {
+      assert.equal(invoice.status, "PARTIALLY_PAID"); assert.equal(eventId, "WH-1"); synced = true;
+    } });
+  assert.equal(response.status, 200); assert.equal(synced, true);
+});
+
+test("nested events cannot access the database before signature verification", async () => {
+  const response = await handlePayPalWebhook(request({ ...event, resource: { invoice: { id: "INV2-TEST" } } }), {
+    ...dependencies(), verify: async () => false,
+    findInvoice: async () => { assert.fail("Must not query"); },
+  });
+  assert.equal(response.status, 401);
+});
+
+test("missing and conflicting invoice references cannot update records", async () => {
+  for (const resource of [{}, { id: "INV2-OTHER", invoice: { id: "INV2-TEST" } }]) {
+    const response = await handlePayPalWebhook(request({ ...event, resource }), {
+      ...dependencies(), findInvoice: async () => { assert.fail("Must not query"); },
+    });
+    assert.equal(response.status, 400);
+  }
+});

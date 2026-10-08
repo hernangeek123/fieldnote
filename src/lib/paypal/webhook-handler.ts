@@ -2,10 +2,14 @@ import { z } from "zod";
 import type { PayPalInvoice } from "./client";
 
 const MAX_WEBHOOK_BYTES = 256 * 1024;
+const invoiceIdSchema = z.string().min(1).max(100);
 const eventSchema = z.object({
   id: z.string().min(1).max(200),
   event_type: z.string().min(1).max(100),
-  resource: z.object({ id: z.string().min(1).max(100) }).passthrough(),
+  resource: z.object({
+    id: invoiceIdSchema.optional(),
+    invoice: z.object({ id: invoiceIdSchema }).passthrough().optional(),
+  }).passthrough(),
 }).passthrough();
 
 type Dependencies = {
@@ -56,11 +60,15 @@ export async function handlePayPalWebhook(request: Request, dependencies: Depend
     }
     const event = parsed.data;
     if (!event.event_type.startsWith("INVOICING.INVOICE.")) return Response.json({ received: true });
-    const record = await dependencies.findInvoice(event.resource.id);
+    const invoiceId = event.resource.invoice?.id ?? event.resource.id;
+    if (!invoiceId || (event.resource.invoice && event.resource.id && event.resource.id !== invoiceId)) {
+      return Response.json({ error: "Invalid invoice reference." }, { status: 400 });
+    }
+    const record = await dependencies.findInvoice(invoiceId);
     if (!record) return Response.json({ received: true });
     const observedAt = new Date().toISOString();
-    const current = await dependencies.getInvoice(event.resource.id);
-    if (current.id !== event.resource.id) throw new Error("Invoice ID mismatch.");
+    const current = await dependencies.getInvoice(invoiceId);
+    if (current.id !== invoiceId) throw new Error("Invoice ID mismatch.");
     await dependencies.syncInvoice(record.id, current, observedAt, event.id, event.event_type);
     return Response.json({ received: true });
   } catch {

@@ -97,7 +97,8 @@ keys. Only the Supabase project URL, publishable key, and site URL use the
 
 1. Create a dedicated project and enable email sign-in.
 2. Apply all SQL files in [supabase/migrations](supabase/migrations) in filename
-   order: foundation, foreign-key indexes, PayPal invoices, then invoice safeguards
+   order: foundation, foreign-key indexes, PayPal invoices, invoice safeguards,
+   then PayPal invoice-date defaults
    and status sync.
 3. Set the project URL and publishable key in your environment.
 4. Set the Auth site URL to your app origin and allow

@@ -29,7 +29,7 @@ export type PayPalInvoice = z.infer<typeof invoiceSchema>;
 
 export const draftPayloadSchema = z.object({
   detail: z.object({
-    currency_code: z.literal("USD"), invoice_date: z.iso.date(),
+    currency_code: z.literal("USD"), invoice_date: z.iso.date().optional(),
     invoice_number: z.string().min(1).max(25), reference: z.string(), note: z.string(),
     payment_term: z.object({ term_type: z.literal("DUE_ON_RECEIPT") }),
   }),

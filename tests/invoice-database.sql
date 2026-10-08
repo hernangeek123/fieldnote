@@ -23,6 +23,9 @@ begin
   select count(*) into item_count from public.note_line_items where field_note_id = note_id;
   if item_count <> 1 then raise exception 'Invalid review changed line items'; end if;
   first_invoice := public.reserve_paypal_invoice(note_id, 'Test merchant');
+  if first_invoice.draft_payload->'detail' ? 'invoice_date' then
+    raise exception 'New reservation must let PayPal choose its current issue date';
+  end if;
   second_invoice := public.reserve_paypal_invoice(note_id, 'Changed merchant');
   if first_invoice.id <> second_invoice.id or first_invoice.draft_payload <> second_invoice.draft_payload
      or first_invoice.create_request_id <> second_invoice.create_request_id then raise exception 'Reservation changed retry data'; end if;

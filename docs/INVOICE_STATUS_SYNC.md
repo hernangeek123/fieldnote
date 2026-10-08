@@ -6,7 +6,10 @@
 - Reviews and invoice reservations lock the same note row to prevent races.
 - Any invoice reservation locks the note and its line items in the database,
   including stale browser requests and direct writes through the Data API.
-- The invoice payload, invoice date, merchant name, and request IDs are frozen.
+- The invoice payload, merchant name, and request IDs are frozen. New reservations
+  omit the optional issue date so PayPal chooses its current merchant-local day,
+  avoiding unintended scheduling across a UTC date boundary. Existing reservations
+  keep their original payload, including any explicit issue date.
 - A stable invoice number provides another duplicate guard if request-ID retention
   has expired. Duplicate-number responses are reconciled through invoice search.
 - Concurrent create/send requests use a two-minute recoverable operation lease.
@@ -15,6 +18,9 @@
 - **Refresh status** reads PayPal and updates the local invoice status.
 - The signed webhook reads current PayPal state, then records the event and status
   in one transaction. Duplicate IDs and older observations cannot overwrite it.
+- Both `resource.invoice.id` (observed in actual Sandbox delivery) and the flat
+  `resource.id` shape are supported. The complete original event is forwarded for
+  signature verification; invoice references are never used before verification.
 - The webhook event ledger is private and accessible only to the service role.
 
 An invoiced note and a paid invoice are different states. The note remains
@@ -26,7 +32,8 @@ full payment; the current invoice response is authoritative.
 
 1. Apply `supabase/migrations/20261008004921_invoice_safeguards_and_status_sync.sql`
    if it is not already in that project's migration history. It has been applied
-   to the FieldNote project.
+   to the FieldNote project. Apply the subsequent `paypal_invoice_date_defaults`
+   migration as well, after updating the application to accept an omitted date.
 2. Deploy the updated source. Browser testing is still required before submission.
 3. In the same PayPal Sandbox REST app used by FieldNote, register an HTTPS webhook
    at `https://fieldnote-lime.vercel.app/api/paypal/webhook`. For a separate copy,

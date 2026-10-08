@@ -40,6 +40,21 @@ test("a duplicate invoice number reconciles the existing invoice", async (t) => 
   assert.equal((await createPayPalDraftInvoice({ requestId: "stable-id", payload })).id, "INV2-EXISTING");
 });
 
+test("new drafts preserve an omitted issue date so PayPal chooses its current day", async (t) => {
+  const { invoice_date: omittedDate, ...detail } = payload.detail;
+  assert.ok(omittedDate);
+  const bodies: string[] = [];
+  t.mock.method(globalThis, "fetch", async (url: string, init: RequestInit) => {
+    if (String(url).endsWith("/oauth2/token")) return Response.json({ access_token: "test", expires_in: 3600 });
+    bodies.push(String(init.body));
+    return Response.json({ id: "INV2-TEST", status: "DRAFT" });
+  });
+  await createPayPalDraftInvoice({ requestId: "stable-date-default", payload: { ...payload, detail } });
+  await createPayPalDraftInvoice({ requestId: "stable-date-default", payload: { ...payload, detail } });
+  assert.equal(bodies[0], bodies[1]);
+  assert.equal(Object.hasOwn(JSON.parse(bodies[0]).detail, "invoice_date"), false);
+});
+
 test("missing signature headers and untrusted certificate URLs are rejected before network access", async (t) => {
   t.mock.method(globalThis, "fetch", async () => { assert.fail("Must not fetch"); });
   assert.equal(await verifyPayPalWebhook(new Headers(), {}), false);
