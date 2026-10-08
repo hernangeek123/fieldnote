@@ -54,5 +54,6 @@ creation and confirmed sending. The submission should show both integrations.
 
 Do not claim live payments, automatic paid-status updates, measured time savings,
 or broad customer adoption that the current build and evidence do not support.
-Invoice-status syncing is deployed and its webhook is configured, but still needs
-a real Sandbox delivery test before it can be presented as verified.
+Invoice-status syncing is deployed. Actual signed Sandbox created, updated, and
+sent notifications are verified; buyer checkout, paid-status delivery, and the
+complete browser workflow still need verification.

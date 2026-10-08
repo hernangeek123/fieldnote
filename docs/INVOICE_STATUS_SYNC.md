@@ -75,9 +75,45 @@ check, although no webhook delivery logs were available.
 A temporary unsent Sandbox draft was created and updated with both email
 notifications disabled. PayPal's event listing returned no notification for it
 during this check. The draft was deleted (HTTP 204), and its subsequent lookup
-returned HTTP 404. Existing FieldNote invoices were unchanged. Actual signed
-delivery, financial-status synchronization, redelivery, and the authenticated
-browser flow remain unverified. No invoice email was sent or payment taken.
+returned HTTP 404. Existing FieldNote invoices were unchanged. At that stage,
+actual signed delivery and the authenticated browser flow were unverified. No
+invoice email was sent or payment taken during this initial setup check.
+
+### Signed Sandbox Event Test
+
+Later on October 7 (Eastern), a separate acceptance customer and reviewed plumbing
+note were prepared through the database/API path in the owner's workspace. The
+three reviewed items total $320.00. The original placeholder-customer invoice was
+left unchanged. This tests the backend path, not browser capture, AI extraction,
+or the review interface.
+
+The real notification used `resource.invoice.id`, unlike the flat example in the
+invoicing guide. Commit `52e2665` added support for both shapes while preserving
+the full signed event. All 20 regression tests, lint, TypeScript, and the production
+build passed. The date-default migration was applied as version
+`20261008012825`; rollback-only database checks passed, including omitted-date
+reservations, frozen retries, ownership, locking, and duplicate protection.
+
+The test invoice was initially scheduled because its UTC issue date was October 8
+while PayPal's current day was October 7. An unsent temporary probe confirmed
+PayPal chooses October 7 when the date is omitted; the probe was deleted. The
+isolated acceptance invoice's issue date was corrected in PayPal without changing
+its buyer, items, or total; its original frozen creation payload was preserved.
+The same invoice and send request ID were then used for sending.
+
+Actual signature-verified CREATED, UPDATED, and SENT events reached production
+and were recorded in the private ledger. FieldNote automatically changed the note
+to invoiced and the invoice to SENT, without a manual status write after sending.
+PayPal accepted a SENT-event redelivery request (HTTP 202); a subsequent database
+read still showed one record for that event, three events total, and the unchanged
+status/sync timestamp. PayPal's event-details API did not expose transmission logs,
+so transport confirmation for the duplicate attempt is unavailable.
+
+The acceptance note is `a4a5b255-43fe-4acc-ac8e-511c02f403e2`; its Sandbox invoice is
+`INV2-F3EJ-FSH5-ZUCF-FLYK`. The buyer was given its Sandbox payment link. Buyer
+checkout, the signed PAID event, manual-refresh parity, and authenticated browser
+reload are pending. No payment was taken during preparation, and no payment was
+artificially marked as received.
 
 Run:
 

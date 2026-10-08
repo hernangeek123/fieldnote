@@ -127,4 +127,7 @@ tests, rollback-only database checks, lint, TypeScript, and the production build
 passed. Browser control remained unavailable, so authenticated end-to-end flows
 and real Sandbox webhook delivery still require verification. The implementation
 is now deployed and its Sandbox webhook is configured; hosted HTTP checks passed.
-See `INVOICE_STATUS_SYNC.md` for the deployment and temporary-draft test record.
+Later backend checks passed all 20 regression tests and recorded actual signed
+Sandbox CREATED, UPDATED, and SENT events. The acceptance invoice is sent and
+awaiting buyer checkout; PAID delivery and the full authenticated browser flow
+remain pending. See `INVOICE_STATUS_SYNC.md` for the detailed test record.
