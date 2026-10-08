@@ -52,8 +52,9 @@ The AI turns rough work descriptions into catalog-linked suggestions; the owner
 controls pricing and recipient selection. PayPal provides actual Sandbox invoice
 creation and confirmed sending. The submission should show both integrations.
 
-Do not claim live payments, automatic paid-status updates, measured time savings,
-or broad customer adoption that the current build and evidence do not support.
-Invoice-status syncing is deployed. Actual signed Sandbox created, updated, and
-sent notifications are verified; buyer checkout, paid-status delivery, and the
-complete browser workflow still need verification.
+Do not claim live payments, measured time savings, or broad customer adoption
+that the current build and evidence do not support. Invoice-status syncing is
+deployed. Actual signed Sandbox created, updated, sent, and paid notifications
+are verified, including automatic paid-status persistence after buyer checkout
+for a USD 320.00 invoice. The complete authenticated browser workflow still needs
+verification.

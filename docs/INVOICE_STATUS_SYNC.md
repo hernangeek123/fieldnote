@@ -110,10 +110,19 @@ status/sync timestamp. PayPal's event-details API did not expose transmission lo
 so transport confirmation for the duplicate attempt is unavailable.
 
 The acceptance note is `a4a5b255-43fe-4acc-ac8e-511c02f403e2`; its Sandbox invoice is
-`INV2-F3EJ-FSH5-ZUCF-FLYK`. The buyer was given its Sandbox payment link. Buyer
-checkout, the signed PAID event, manual-refresh parity, and authenticated browser
-reload are pending. No payment was taken during preparation, and no payment was
-artificially marked as received.
+`INV2-F3EJ-FSH5-ZUCF-FLYK`. The buyer completed checkout and reported payment.
+A read-only database check, before any manual refresh, found invoice status PAID
+and the signature-verified `INVOICING.INVOICE.PAID` event
+`WH-71D720095U1141701-3GU26358536811841`, received at
+`2026-10-08T01:43:08.067213Z`. The note remained invoiced, as expected. A separate
+read-only PayPal lookup confirmed USD 320.00 paid, USD 0.00 due, and status PAID.
+This verifies automatic paid-status persistence on production commit `837a5e2`.
+No payment was artificially marked as received and no live payment was taken.
+After being asked to reload the FieldNote invoice and check its Paid badge, the
+owner reported that everything looked good. This is user-confirmed UI evidence,
+not agent-observed browser verification. Manual-refresh parity remains pending;
+browser capture, AI extraction, and review were not covered by this backend
+fixture.
 
 Run:
 

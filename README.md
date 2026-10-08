@@ -164,8 +164,10 @@ alone does not establish that authentication, AI, and PayPal work together.
 - Automatic invoice-status updates require a registered webhook and server-side
   configuration. These are configured on the hosted FieldNote deployment. The
   implementation has regression coverage and verified signed Sandbox created,
-  updated, and sent notifications. Buyer payment, the paid notification, and
-  browser reload still need verification; see the webhook setup notes.
+  updated, sent, and paid notifications. Buyer checkout and automatic persistence
+  of a fully paid USD 320.00 Sandbox invoice are verified. The owner confirmed
+  the displayed result; automated browser verification remains unavailable.
+  See the webhook setup notes.
 - A creation attempt freezes its data, including failed or ambiguous attempts.
   Create a new note if the invoice details need correction.
 - Shared judge accounts, one-click sample-data provisioning, and general email
