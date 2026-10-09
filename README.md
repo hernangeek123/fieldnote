@@ -85,7 +85,7 @@ private, cloning requires repository access.
 | `PAYPAL_WEBHOOK_ID` | Optional registered Sandbox webhook ID for automatic status updates |
 | `SUPABASE_SECRET_KEY` | Optional server-only Supabase secret key for verified webhook writes |
 | `AI_GATEWAY_API_KEY` | Local AI Gateway authentication, unless using Vercel OIDC |
-| `AI_GATEWAY_MODEL` | Extraction model; defaults to `openai/gpt-5.4-mini` |
+| `AI_GATEWAY_MODEL` | Set to `openai/gpt-4.1-mini` for the verified free-credit setup; code fallback is `openai/gpt-5.4-mini` |
 | `AI_GATEWAY_TRANSCRIPTION_MODEL` | Defaults to `openai/gpt-4o-mini-transcribe` |
 
 Real credentials belong in uncommitted `.env.local` or the deployment's server
@@ -133,6 +133,15 @@ use Vercel's linked project environment with a current OIDC token, or configure
 an uncommitted `AI_GATEWAY_API_KEY`. Ensure the gateway account can fund the
 selected models. No direct OpenAI key is required by this implementation.
 
+The hosted demo uses `AI_GATEWAY_MODEL=openai/gpt-4.1-mini`. Live structured
+extraction passed on October 9, 2026 after switching from GPT-5.4 Mini, which the
+Gateway rejected for this free-tier account. GPT-4.1 Mini is currently eligible
+for [AI Gateway free credits](https://vercel.com/ai-gateway/models/gpt-4.1-mini).
+This uses the limited monthly allowance, not unlimited free inference; model
+eligibility and rate limits can change. Transcription remains
+`openai/gpt-4o-mini-transcribe`. Set the extraction variable explicitly for a new
+deployment; the code fallback still selects GPT-5.4 Mini.
+
 ### Deploying a separate copy
 
 Import the repository into Vercel, configure the variables above, enable OIDC if
@@ -144,6 +153,7 @@ Verify sign-in before running the invoice walkthrough.
 
 ```bash
 npm test
+npm run test:hosted
 npm run lint
 npx tsc --noEmit
 npm run build
@@ -151,8 +161,13 @@ npm run build
 
 Automated regression tests cover invoice retries, send reconciliation, signature
 verification, and webhook failure handling. The rollback-only database checks are
-in `tests/invoice-database.sql`; run them as the database owner on a test project
-with at least one Auth user. There is currently no browser end-to-end test suite.
+in `tests/invoice-database.sql` and `tests/workflow-database.sql`; run them as the
+database owner on a test project with at least one Auth user. Both roll back all
+fixtures. The workflow test covers the reviewed USD 320.00 sample job and
+cross-owner read/write protection, not AI or browser interaction.
+`npm run test:hosted` checks the live FieldNote login, unauthenticated route
+redirects, callback errors, and unsigned webhook rejection without credentials.
+It does not send email or invoices. There is currently no browser end-to-end test suite.
 Use the walkthrough for production acceptance testing; successful deployment
 alone does not establish that authentication, AI, and PayPal work together.
 

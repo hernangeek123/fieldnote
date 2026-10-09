@@ -29,8 +29,8 @@ export default async function CustomersPage({ searchParams }: PageProps) {
 
       <Notice error={first(params.error)} success={first(params.created)} />
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-        <section>
+      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <section className="min-w-0">
           <h2 className="text-lg font-semibold">Add customer</h2>
           <form action={createCustomer} className="mt-5 space-y-4 rounded-md border border-[#d7ddd7] bg-white p-5">
             <label className="block">
@@ -53,7 +53,7 @@ export default async function CustomersPage({ searchParams }: PageProps) {
           </form>
         </section>
 
-        <section>
+        <section className="min-w-0">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Customer list</h2>
             <span className="text-sm text-[#657068]">{customers?.length ?? 0} total</span>
@@ -63,11 +63,11 @@ export default async function CustomersPage({ searchParams }: PageProps) {
               <ul className="divide-y divide-[#e1e5e0]">
                 {customers.map((customer) => (
                   <li key={customer.id} className="p-5">
-                    <p className="font-semibold">{customer.name}</p>
+                    <p className="font-semibold [overflow-wrap:anywhere]">{customer.name}</p>
                     <div className="mt-3 space-y-2 text-sm text-[#657068]">
-                      {customer.email ? <p className="flex items-center gap-2"><Mail size={15} />{customer.email}</p> : null}
-                      {customer.phone ? <p className="flex items-center gap-2"><Phone size={15} />{customer.phone}</p> : null}
-                      {customer.address ? <p className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={15} />{customer.address}</p> : null}
+                      {customer.email ? <p className="flex items-start gap-2"><Mail className="mt-0.5 shrink-0" size={15} /><span className="min-w-0 [overflow-wrap:anywhere]">{customer.email}</span></p> : null}
+                      {customer.phone ? <p className="flex items-start gap-2"><Phone className="mt-0.5 shrink-0" size={15} /><span className="min-w-0 [overflow-wrap:anywhere]">{customer.phone}</span></p> : null}
+                      {customer.address ? <p className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={15} /><span className="min-w-0 [overflow-wrap:anywhere]">{customer.address}</span></p> : null}
                     </div>
                   </li>
                 ))}

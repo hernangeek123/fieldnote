@@ -6,6 +6,7 @@ import { getVercelOidcToken } from "@vercel/oidc";
 import { z } from "zod";
 import { extractFieldNote } from "@/lib/ai/extract-field-note";
 import { transcribeFieldNote } from "@/lib/ai/transcribe-field-note";
+import { DraftSaveResult, saveFieldNoteDraft } from "@/lib/notes/save-draft";
 import {
   createPayPalDraftInvoice,
   getPayPalInvoice,
@@ -90,12 +91,6 @@ export async function createCatalogItem(formData: FormData) {
   redirect(messageUrl("/app/catalog", "created", `${parsed.data.name} was added.`));
 }
 
-const fieldNoteSchema = z.object({
-  customer_id: z.union([z.literal(""), z.uuid()]).transform((value) => value || null),
-  occurred_on: z.iso.date(),
-  raw_note: z.string().trim().min(1).max(10000),
-});
-
 const MAX_AUDIO_BYTES = 4 * 1024 * 1024;
 const SUPPORTED_AUDIO_TYPES = new Set([
   "audio/flac",
@@ -150,18 +145,17 @@ export async function transcribeFieldNoteAudio(
   }
 }
 
-export async function createFieldNote(formData: FormData) {
-  const parsed = fieldNoteSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) {
-    redirect(messageUrl("/app/notes/new", "error", "Add a note before saving."));
-  }
-
+export async function createFieldNote(formData: FormData): Promise<DraftSaveResult> {
   const supabase = await authenticatedClient();
-  const { error } = await supabase.from("field_notes").insert(parsed.data);
-  if (error) redirect(messageUrl("/app/notes/new", "error", error.message));
+  const result = await saveFieldNoteDraft(formData, async (draft) => {
+    const { data, error } = await supabase.from("field_notes").insert(draft).select("id").single();
+    return { noteId: data?.id ?? null, error: error?.message ?? null };
+  });
+  if (!result.ok) return result;
 
   revalidatePath("/app");
-  redirect(messageUrl("/app/notes/new", "created", "Field note saved as a draft."));
+  revalidatePath("/app/notes");
+  return result;
 }
 
 export async function generateFieldNoteLineItems(noteId: string, formData: FormData) {

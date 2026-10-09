@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { GuardedForm, GuardedLink as Link, NavigationGuardProvider } from "@/components/navigation-guard";
 import {
   BookOpenText,
   LayoutDashboard,
@@ -21,6 +21,7 @@ export function AppShell({
   children,
 }: Readonly<{ email: string; children: React.ReactNode }>) {
   return (
+    <NavigationGuardProvider>
     <div className="min-h-screen bg-[#f3f5f2] text-[#17201a]">
       <header className="sticky top-0 z-20 border-b border-[#d7ddd7] bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
@@ -53,12 +54,12 @@ export function AppShell({
           </nav>
           <div className="mt-auto border-t border-[#e1e5e0] pt-5">
             <p className="truncate px-3 text-xs text-[#758078]">{email}</p>
-            <form action={signOut} className="mt-2">
+            <GuardedForm action={signOut} className="mt-2">
               <button className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-sm font-medium text-[#4f5b52] hover:bg-[#edf2ed]">
                 <LogOut size={17} aria-hidden="true" />
                 Sign out
               </button>
-            </form>
+            </GuardedForm>
           </div>
         </aside>
 
@@ -83,5 +84,6 @@ export function AppShell({
         ))}
       </nav>
     </div>
+    </NavigationGuardProvider>
   );
 }

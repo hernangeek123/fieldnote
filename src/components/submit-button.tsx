@@ -15,16 +15,19 @@ type SubmitButtonProps = {
   label: string;
   pendingLabel: string;
   icon: SubmitButtonIcon;
+  disabled?: boolean;
+  isPending?: boolean;
 };
 
-export function SubmitButton({ label, pendingLabel, icon }: SubmitButtonProps) {
-  const { pending } = useFormStatus();
+export function SubmitButton({ label, pendingLabel, icon, disabled = false, isPending = false }: SubmitButtonProps) {
+  const { pending: formPending } = useFormStatus();
+  const pending = formPending || isPending;
   const Icon = icons[icon];
 
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#176b3a] px-5 text-sm font-semibold text-white transition hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
     >
       <Icon size={17} aria-hidden="true" />

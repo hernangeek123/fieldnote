@@ -1,8 +1,5 @@
-import { BookOpenText } from "lucide-react";
-import { createFieldNote } from "@/app/app/actions";
 import { Notice } from "@/components/notice";
-import { SubmitButton } from "@/components/submit-button";
-import { VoiceNoteInput } from "@/components/voice-note-input";
+import { NewNoteForm } from "@/components/new-note-form";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -21,19 +18,7 @@ export default async function NewNotePage({ searchParams }: PageProps) {
       <p className="mt-3 text-[#657068]">Record the job details or type a rough note, then review the transcript before saving.</p>
       <Notice error={first(params.error)} success={first(params.created)} />
 
-      <form action={createFieldNote} className="mt-8 rounded-md border border-[#d7ddd7] bg-white p-5 sm:p-7">
-        <div className="grid gap-5 sm:grid-cols-2">
-          <label className="block"><span className="field-label">Customer</span><select className="field-input" name="customer_id" defaultValue=""><option value="">No customer selected</option>{customers?.map((customer) => <option key={customer.id} value={customer.id}>{customer.name}</option>)}</select></label>
-          <label className="block"><span className="field-label">Job date</span><input className="field-input" type="date" name="occurred_on" defaultValue={today} required /></label>
-        </div>
-
-        <VoiceNoteInput />
-
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#e1e5e0] pt-5">
-          <p className="flex items-center gap-2 text-sm text-[#657068]"><BookOpenText size={17} />Saved notes remain drafts until you review them.</p>
-          <SubmitButton label="Save draft" pendingLabel="Saving..." icon="save" />
-        </div>
-      </form>
+      <NewNoteForm customers={customers ?? []} today={today} />
     </div>
   );
 }

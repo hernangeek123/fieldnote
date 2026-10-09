@@ -33,7 +33,10 @@ function extensionFor(type: string) {
   return "webm";
 }
 
-export function VoiceNoteInput() {
+export function VoiceNoteInput({ onStateChange, disabled = false }: {
+  onStateChange?: (state: { dirty: boolean; busy: boolean }) => void;
+  disabled?: boolean;
+}) {
   const [note, setNote] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -47,6 +50,12 @@ export function VoiceNoteInput() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recordingErrorRef = useRef<string | null>(null);
+  const dirty = Boolean(note || audioFile || isRecording);
+  const busy = isRecording || isTranscribing;
+
+  useEffect(() => {
+    onStateChange?.({ dirty, busy });
+  }, [dirty, busy, onStateChange]);
 
   useEffect(() => {
     return () => {
@@ -210,7 +219,7 @@ export function VoiceNoteInput() {
               <button
                 type="button"
                 onClick={startRecording}
-                disabled={isTranscribing}
+                disabled={disabled || isTranscribing}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#176b3a] px-4 text-sm font-semibold text-white hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
               >
                 <Mic size={17} aria-hidden="true" />
@@ -228,6 +237,7 @@ export function VoiceNoteInput() {
                   accept="audio/*,video/mp4,video/webm"
                   capture="user"
                   onChange={chooseAudio}
+                  disabled={disabled || isTranscribing}
                   className="sr-only"
                 />
               </label>
@@ -252,7 +262,7 @@ export function VoiceNoteInput() {
               <button
                 type="button"
                 onClick={discardAudio}
-                disabled={isTranscribing}
+                disabled={disabled || isTranscribing}
                 className="inline-flex size-10 shrink-0 items-center justify-center rounded-md text-[#657068] hover:bg-[#e5ebe5] hover:text-[#8a2e25] disabled:opacity-50"
                 title="Discard recording"
                 aria-label="Discard recording"
@@ -265,7 +275,7 @@ export function VoiceNoteInput() {
               <button
                 type="button"
                 onClick={transcribeAudio}
-                disabled={isTranscribing}
+                disabled={disabled || isTranscribing}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#17201a] px-4 text-sm font-semibold text-white hover:bg-[#2c382f] disabled:cursor-wait disabled:bg-[#8fa197]"
               >
                 {isTranscribing ? (
@@ -296,6 +306,7 @@ export function VoiceNoteInput() {
         required
         maxLength={10000}
         value={note}
+        disabled={disabled || isTranscribing}
         onChange={(event) => setNote(event.target.value)}
         placeholder="Replaced the leaking kitchen faucet for Maria. Used one chrome fixture and two supply lines. Two hours of labor..."
       />
