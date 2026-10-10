@@ -56,6 +56,30 @@ begin
     raise exception 'Reservation did not preserve one frozen three-item invoice.';
   end if;
 
+  update public.customers set name = 'Updated customer', email = 'updated@example.com',
+    phone = '555-0100', address = 'Updated service address' where id = customer;
+  update public.catalog_items set name = 'Updated faucet', unit_price_cents = 14000, active = false where id = faucet;
+  if not exists (select 1 from public.customers where id = customer and email = 'updated@example.com'
+      and phone = '555-0100' and address = 'Updated service address')
+      or not exists (select 1 from public.catalog_items where id = faucet and not active and unit_price_cents = 14000) then
+    raise exception 'Owner customer or catalog update did not persist.';
+  end if;
+  if exists (select 1 from public.catalog_items where id = faucet and active) then
+    raise exception 'Inactive catalog entry remained available for new matches.';
+  end if;
+  select sum(quantity * unit_price_cents) into total from public.note_line_items where field_note_id = note;
+  retry := public.reserve_paypal_invoice(note, 'Different merchant');
+  if total <> 32000 or retry.draft_payload <> invoice.draft_payload
+      or retry.draft_payload #>> '{primary_recipients,0,billing_info,email_address}' <> 'sandbox@example.com'
+      or not exists (select 1 from public.note_line_items where field_note_id = note
+        and catalog_item_id = faucet and description = 'Chrome kitchen faucet' and unit_price_cents = 12000) then
+    raise exception 'Master-data edits changed saved prices, links or the frozen invoice recipient.';
+  end if;
+  update public.catalog_items set active = true where id = faucet;
+  if not exists (select 1 from public.catalog_items where id = faucet and active) then
+    raise exception 'Reactivating a service failed.';
+  end if;
+
   -- A simulated different authenticated subject exercises RLS, not browser sign-in.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', gen_random_uuid(), 'role', 'authenticated')::text, true);
   if exists(select 1 from public.customers where id = customer)
@@ -68,6 +92,9 @@ begin
   update public.customers set name = 'Not allowed' where id = customer;
   get diagnostics affected = row_count;
   if affected <> 0 then raise exception 'Another subject could update the customer.'; end if;
+  update public.catalog_items set unit_price_cents = 1, active = false where id = faucet;
+  get diagnostics affected = row_count;
+  if affected <> 0 then raise exception 'Another subject could edit or deactivate the service.'; end if;
   begin
     insert into public.field_notes(owner_id, customer_id, raw_note)
       values (owner, customer, 'Forbidden cross-owner insert');
@@ -80,5 +107,5 @@ end;
 $$;
 
 reset role;
-select 'Database-path sample job, USD 320.00 review, approval reset, frozen retry, and cross-owner read/write protection passed.' as result;
+select 'Database-path sample job, master-data edits, deactivation/reactivation, preserved USD 320.00 review and invoice snapshot, and cross-owner read/write protection passed.' as result;
 rollback;

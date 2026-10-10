@@ -40,6 +40,11 @@ above during review rather than similarly named entries at different prices.
 
 ## Capture And Review
 
+Customer and service pencil buttons open editors with **Save changes** and
+**Cancel**. A service's **Active service** checkbox controls whether it is
+available for new matches. Editing the price book does not reprice saved line
+items. Customer changes do not update a reserved PayPal invoice or its recipient.
+
 1. Open **New field note**, select **Demo Plumbing Customer**, and use today's date.
 2. Choose **Record note**, allow microphone access, and speak the example below;
    then choose **Stop recording**. Alternatively, upload a short supported audio
@@ -381,3 +386,35 @@ that base commit alone; credentials and local environment files were excluded.
 All 25 regression tests, four hosted HTTP checks, lint, and the production build
 passed. Recent runtime error/fatal logs were empty. Screenshots of the mobile
 warning, retained failed-save form, and saved test draft were kept outside Git.
+
+### October 10 Customer And Price-Book Editing
+
+Local changes over commit `573c1c4` add authenticated customer/service editing,
+service deactivation/reactivation, validation with retained form values, and
+timestamp-based protection against stale updates. The invoice panel and send
+confirmation now use the recipient saved in the reserved invoice payload, not
+the customer's current email. Legacy missing snapshots display no recipient
+rather than guessing. Existing line-item prices and descriptions remain saved
+values; an inactive linked service stays visible on its existing review row.
+
+All 31 regression tests, lint, and the production build passed. The expanded
+rollback-only database suite passed against FieldNote: owner contact/catalog
+updates, deactivate/reactivate, preserved catalog links and USD 320.00 saved
+total, unchanged frozen recipient/payload, and blocked cross-owner updates.
+No schema changes or permanent database test-suite changes were required.
+
+Chrome signed in locally through the owner's email-link flow. Browser checks
+verified customer name/email/phone/address edits and service
+name/description/unit/price edits persisted after reload. Customer Cancel
+discarded changes, a server validation error retained the editor's fields, and
+a stale second-tab save could not overwrite a newer customer version. Service
+deactivation and reactivation persisted. Both open editors fit a 320-pixel
+viewport without horizontal overflow; screenshots were saved outside Git and
+the viewport override was reset. These are local desktop-Chrome viewport checks,
+not hosted deployment or physical-phone certification.
+
+Two clearly named synthetic records remain in the owner's workspace:
+**Editor verification customer updated** and **Editor verification service
+updated**. The service is inactive at USD 23.45 per hour. Existing demo records
+and invoices were not edited. No note or PayPal invoice was created or sent.
+These source changes have not yet been committed, pushed, or deployed.

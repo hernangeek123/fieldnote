@@ -7,6 +7,7 @@ import { PayPalInvoicePanel } from "@/components/paypal-invoice-panel";
 import { ReviewEditor } from "@/components/review-editor";
 import { StatusBadge } from "@/components/status-badge";
 import { isPayPalConfigured } from "@/lib/paypal/client";
+import { invoiceRecipientEmail } from "@/lib/paypal/invoice-recipient";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = {
@@ -38,12 +39,11 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
       .order("created_at"),
     supabase
       .from("catalog_items")
-      .select("id, name, unit, unit_price_cents")
-      .eq("active", true)
+      .select("id, name, unit, unit_price_cents, active")
       .order("name"),
     supabase
       .from("paypal_invoices")
-      .select("paypal_invoice_id, invoice_number, status, recipient_view_url, invoicer_view_url, last_error, last_synced_at")
+      .select("paypal_invoice_id, invoice_number, status, recipient_view_url, invoicer_view_url, last_error, last_synced_at, draft_payload")
       .eq("field_note_id", id)
       .maybeSingle(),
   ]);
@@ -109,7 +109,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
           <PayPalInvoicePanel
             noteId={note.id}
             noteStatus={note.status}
-            customerEmail={customer?.email ?? null}
+            customerEmail={paypalInvoice ? invoiceRecipientEmail(paypalInvoice.draft_payload) : customer?.email ?? null}
             configured={isPayPalConfigured()}
             invoice={paypalInvoice}
           />

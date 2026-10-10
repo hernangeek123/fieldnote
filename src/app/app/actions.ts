@@ -16,6 +16,7 @@ import {
 } from "@/lib/paypal/client";
 import { InvoiceNotSendableError, sendInvoiceSafely } from "@/lib/paypal/send-invoice";
 import { createClient } from "@/lib/supabase/server";
+import { catalogItemSchema, catalogUpdateSchema, customerSchema, saveRecordUpdate } from "@/lib/records";
 
 function messageUrl(path: string, type: "created" | "error", message: string) {
   return `${path}?${type}=${encodeURIComponent(message)}`;
@@ -38,19 +39,6 @@ async function isAIGatewayConfigured() {
   }
 }
 
-const optionalText = z
-  .string()
-  .trim()
-  .max(240)
-  .transform((value) => value || null);
-
-const customerSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  email: z.union([z.literal(""), z.email()]).transform((value) => value || null),
-  phone: optionalText,
-  address: optionalText,
-});
-
 export async function createCustomer(formData: FormData) {
   const parsed = customerSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
@@ -66,12 +54,33 @@ export async function createCustomer(formData: FormData) {
   redirect(messageUrl("/app/customers", "created", `${parsed.data.name} was added.`));
 }
 
-const catalogItemSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  description: optionalText,
-  unit: z.string().trim().min(1).max(40),
-  price: z.coerce.number().min(0).max(1000000),
-});
+export async function updateCustomer(id: string, updatedAt: string, formData: FormData) {
+  const supabase = await authenticatedClient();
+  const result = await saveRecordUpdate(id, updatedAt, formData, customerSchema, async (recordId, version, values) => {
+    const { data, error } = await supabase.from("customers")
+      .update({ ...values, updated_at: new Date().toISOString() })
+      .eq("id", recordId).eq("updated_at", version).select("id").maybeSingle();
+    return { id: data?.id ?? null, error: error?.message ?? null };
+  });
+  if (result.ok) {
+    revalidatePath("/app", "layout");
+  }
+  return result;
+}
+
+export async function updateCatalogItem(id: string, updatedAt: string, formData: FormData) {
+  const supabase = await authenticatedClient();
+  const result = await saveRecordUpdate(id, updatedAt, formData, catalogUpdateSchema, async (recordId, version, { price, ...values }) => {
+    const { data, error } = await supabase.from("catalog_items")
+      .update({ ...values, unit_price_cents: Math.round(price * 100), updated_at: new Date().toISOString() })
+      .eq("id", recordId).eq("updated_at", version).select("id").maybeSingle();
+    return { id: data?.id ?? null, error: error?.message ?? null };
+  });
+  if (result.ok) {
+    revalidatePath("/app", "layout");
+  }
+  return result;
+}
 
 export async function createCatalogItem(formData: FormData) {
   const parsed = catalogItemSchema.safeParse(Object.fromEntries(formData));

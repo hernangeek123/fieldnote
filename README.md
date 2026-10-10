@@ -24,6 +24,15 @@ catalog, not from the model.
 Creating a draft does not send it. The hackathon deployment uses PayPal Sandbox,
 not real-money payments.
 
+Customers and price-book services can be edited using their pencil buttons.
+Uncheck **Active service** to retire a service, or check it again to reactivate it.
+Inactive services are excluded from new AI matches and new line-item selections;
+existing line items retain their saved descriptions, prices, and catalog links.
+Customer edits update the contact record, not an already-reserved PayPal invoice.
+The invoice panel and send confirmation use its frozen recipient address.
+Failed edits preserve the form, and stale updates require a reload instead of
+silently overwriting a newer change.
+
 Invoice creation freezes the reviewed data for stable retries. Saving changes
 before creation returns the note to draft so it must be approved again. Invoice
 status can be refreshed from PayPal; automatic updates require the

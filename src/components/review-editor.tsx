@@ -11,6 +11,7 @@ type CatalogItem = {
   name: string;
   unit: string;
   unit_price_cents: number;
+  active: boolean;
 };
 
 type LineItem = {
@@ -198,9 +199,9 @@ export function ReviewEditor({
                     onChange={(event) => chooseCatalogItem(item.key, event.target.value)}
                   >
                     <option value="">Custom item</option>
-                    {catalog.map((catalogItem) => (
+                    {catalog.filter((entry) => entry.active || entry.id === item.catalog_item_id).map((catalogItem) => (
                       <option key={catalogItem.id} value={catalogItem.id}>
-                        {catalogItem.name} / {catalogItem.unit}
+                        {catalogItem.name} / {catalogItem.unit}{catalogItem.active ? "" : " (inactive)"}
                       </option>
                     ))}
                   </select>
