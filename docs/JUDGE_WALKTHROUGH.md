@@ -109,7 +109,7 @@ For each run, record the date, deployment/commit, browser, outcome, and redacted
 evidence. Do not include email links, access tokens, passwords, or customer PII.
 
 - [ ] New tester can receive a sign-in link and enter the workspace.
-- [ ] Customer and price-book entries persist after reload.
+- [x] Customer and price-book entries persist after reload (October 10 hosted editing check).
 - [x] Recording or upload produces an editable transcript (synthetic WAV upload and owner-recorded microphone WebM both verified).
 - [x] Saved note preserves the selected customer and corrected text.
 - [x] AI suggestions match the catalog or clearly require review (October 9 GPT-4.1 Mini retry).
@@ -119,8 +119,8 @@ evidence. Do not include email links, access tokens, passwords, or customer PII.
 - [x] Workspace shows the saved note and correct state.
 - [x] Optional confirmed send succeeds (user completed the confirmation; agent verified the result).
 - [x] Sandbox payment completes and a verified PAID webhook updates FieldNote before manual status refresh.
-- [ ] Send cancellation does not send (native-dialog automation was interrupted; not independently certified).
-- [ ] A second account cannot view the first account's records.
+- [x] Send cancellation does not send (October 10 owner-operated local Chrome check; unchanged database state verified afterward).
+- [x] A second account cannot view the first account's records (October 10 browser checks against the same database; hosted tester and local owner sessions).
 - [x] Checked desktop and mobile views are usable without clipped controls (Chrome viewport checks, not physical-device certification).
 
 Prior verification run, October 7, 2026: production deployment was reported
@@ -417,4 +417,97 @@ Two clearly named synthetic records remain in the owner's workspace:
 **Editor verification customer updated** and **Editor verification service
 updated**. The service is inactive at USD 23.45 per hour. Existing demo records
 and invoices were not edited. No note or PayPal invoice was created or sent.
-These source changes have not yet been committed, pushed, or deployed.
+These source changes were subsequently committed and pushed as `a5a1fce`.
+
+### October 10 Hosted Acceptance
+
+Vercel deployment `dpl_Hq4ENn8szpUef2QJzWQui7CAA4to` is READY on the public
+FieldNote alias and reports source commit `a5a1fce`. All four hosted HTTP smoke
+tests passed. Its recent runtime error/fatal scan returned no records.
+
+In the second account's hosted Chrome session, the demo customer's email, phone,
+and address were temporarily edited, saved, and checked after reload. The paid
+note displayed the updated contact details while its PayPal panel retained the
+original reserved Sandbox recipient. The original customer fields were restored.
+
+The Chrome kitchen faucet service was temporarily changed from USD 120.00 to
+USD 125.00 and made inactive. Both changes persisted after reload. The existing
+paid note retained its USD 120.00 saved unit price, USD 320.00 total, locked
+review, and existing inactive catalog link. The service was restored to
+USD 120.00 and active. No PayPal send, draft creation, or status refresh was used.
+
+Cross-account browser checks used two authenticated sessions against the same
+Supabase database: the hosted second account and the owner's local app. Each
+could render its own existing note, and each received a not-found page for the
+other account's note. These are real browser read-isolation checks, not two
+production-origin sessions; rollback-only database tests separately cover writes.
+
+An unsaved new note triggered the workspace-link warning, and **Keep editing**
+preserved its text. The owner reported no native refresh/close warning during
+the first manual attempt. The original dirty tab still retained its text, and
+an empty duplicate tab had been open during that attempt; the duplicate was
+closed before requesting a focused retest with manual typing. At that point,
+native refresh/close protection was not certified. Browser dialogs also require
+user activation and are not reliable on every platform. No note was saved for
+this test.
+
+During that focused retest, the owner reported **No warning; nothing happened**.
+The next browser inspection showed the new-note text field empty and no pending
+JavaScript dialog. The test text was therefore no longer retained; the agent
+could not establish why the warning was absent. A further check was requested in
+a new tab opened entirely by the owner, using Chrome's reload button rather than
+the keyboard shortcut and without agent control of that tab. The owner reported
+**Warning appeared; cancelled**. This verifies the native refresh warning and
+its cancellation through the owner's manual production check. It does not
+independently verify retained text after cancellation, tab-close cancellation,
+or other browsers. The result suggests the earlier failure was specific to the
+controlled-tab test conditions; its exact cause was not established. No
+application-source change was required for the successful manual refresh check.
+
+The owner then tried closing that independently opened tab and reported
+**Warning appeared; cancelled; text intact**. Native tab-close warning,
+cancellation, and text retention are now owner-verified in desktop Chrome.
+This is not certification for physical mobile devices or every browser.
+
+Supabase's **Enable custom SMTP** switch was observed off. The default email
+service restricts delivery to project-team addresses, so existing-account login
+does not certify unrelated judge access. The owner has no mail provider or domain
+yet. No provider account, domain purchase, authentication change, or team-access
+workaround was performed. Configure a verified sender with custom SMTP, or choose
+and verify an alternative sign-in method, before certifying judge access.
+
+Independent send-cancellation testing remains pending and was paused during the
+warning investigation. No new note, invoice, send, or payment was initiated in
+this hosted acceptance run.
+
+### October 10 Final Safety Checks And Demo Preparation
+
+The owner independently verified tab-close cancellation in a normal production
+Chrome tab: the warning appeared, cancellation kept the tab open, and the unsaved
+text remained intact. Together with the earlier reload-button check, this covers
+the native desktop-Chrome warnings without agent control of the tested tab.
+
+Send cancellation used an existing USD 416.50 Sandbox draft,
+`INV2-MYZS-X4Y5-UN4X-4NX8`, for note
+`0c94e3ae-c835-489f-a37f-224a993e19b6`. In a separately opened local Chrome tab
+using the owner's session, the owner clicked **Send invoice**, chose **Cancel**,
+and reported that the invoice remained Draft. Read-only database checks before
+and after confirmed `DRAFT`, note state `reviewed`, no active operation token,
+zero SENT webhook events, and the unchanged invoice timestamp from October 6.
+No new invoice, send, or payment was initiated. This is an owner-operated local
+browser check with database verification, not an automated hosted cancellation
+test or a fresh PayPal API reconciliation.
+
+All 31 regression tests and four hosted HTTP smoke checks passed again.
+Application code and deployment configuration were unchanged. Demo narration,
+shot planning, submission copy, and a physical-phone checklist were prepared as
+local documents only. No video was recorded or published, no Devpost submission
+was saved or submitted, and the repository remains private.
+
+Remaining release gates include physical-phone acceptance, unrelated judge email
+delivery after SMTP setup, final footage, source/history review before public
+release, and owner-approved repository/video publication.
+
+References: [Supabase SMTP restrictions](https://supabase.com/docs/guides/auth/auth-smtp),
+[browser warning limitations](https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event),
+[Resend verified domains](https://resend.com/docs/dashboard/domains/introduction).

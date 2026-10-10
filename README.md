@@ -9,7 +9,8 @@ catalog, not from the model.
 
 [Live app](https://fieldnote-lime.vercel.app) |
 [Judge walkthrough](docs/JUDGE_WALKTHROUGH.md) |
-[Submission checklist](docs/HACKATHON_SUBMISSION.md)
+[Submission checklist](docs/HACKATHON_SUBMISSION.md) |
+[Demo script](docs/DEMO_SCRIPT.md)
 
 ## Workflow
 
@@ -47,7 +48,9 @@ automatically copied into new accounts.
 
 The [walkthrough](docs/JUDGE_WALKTHROUGH.md) includes a small plumbing price book,
 a sample note, and a $320 expected invoice after review. Judge email delivery and
-the complete production workflow still need a fresh pre-submission test. See the
+physical-phone behavior still need a fresh pre-submission test. The hosted
+second-account workflow through Sandbox payment and paid-status sync has been
+verified; the walkthrough records its manual and automated evidence. See the
 submission checklist for the access preflight; no shared credentials or secrets
 are published here.
 
@@ -190,12 +193,18 @@ alone does not establish that authentication, AI, and PayPal work together.
   implementation has regression coverage and verified signed Sandbox created,
   updated, sent, and paid notifications. Buyer checkout and automatic persistence
   of a fully paid USD 320.00 Sandbox invoice are verified. The owner confirmed
-  the displayed result; automated browser verification remains unavailable.
+  the displayed result; browser checks also verified the hosted paid-state UI.
   See the webhook setup notes.
 - A creation attempt freezes its data, including failed or ambiguous attempts.
   Create a new note if the invoice details need correction.
 - Shared judge accounts, one-click sample-data provisioning, and general email
   delivery readiness have not yet been verified for submission.
+
+## Security Review
+
+The [pre-publication review](docs/PREPUBLICATION_REVIEW.md) records the scoped
+secret/history scans and sign-in redirect hardening. It is not a comprehensive
+security certification. Publication and judge-access setup remain pending.
 
 ## License
 

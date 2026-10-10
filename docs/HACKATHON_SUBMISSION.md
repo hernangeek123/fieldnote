@@ -1,7 +1,7 @@
 # PayPal AI Hackathon Submission
 
 Requirements checked against the [official rules](https://paypalaihackathon.devpost.com/rules)
-on October 7, 2026. Also review the
+on October 10, 2026. Also review the
 [FAQ](https://paypalaihackathon.devpost.com/details/faqs) and
 [resources](https://paypalaihackathon.devpost.com/resources) before submitting.
 
@@ -18,7 +18,7 @@ Keep judge access available without charge through **December 15, 2026,
 - [ ] Supply approved judge access and Sandbox testing details where needed.
 - [ ] Keep hosting, authentication email delivery, and AI access funded/available
       throughout judging.
-- [ ] Review source and commit history for secrets before publication.
+- [x] Review current source and reachable commit history for secrets (October 10; repeat before publication if content changes).
 - [ ] Make the repository public before submission, with the owner's approval.
 - [ ] Record functioning app footage in English, under three minutes.
 - [ ] Publish the video publicly on YouTube and add its URL to Devpost.
@@ -27,6 +27,13 @@ Keep judge access available without charge through **December 15, 2026,
 
 The repository remains private for now. These documents are preparation, not a
 submitted entry or a declaration that judge access is ready.
+
+Prepared materials: [demo script](DEMO_SCRIPT.md),
+[Devpost description draft](DEVPOST_DRAFT.md), and
+[physical-phone checklist](MOBILE_ACCEPTANCE.md). These are local drafts;
+no Devpost fields, repository visibility, or video publication were changed.
+The [pre-publication review](PREPUBLICATION_REVIEW.md) records the secrets scan,
+dependency check, fixed sign-in redirect finding, and remaining review limits.
 
 ## Demo Outline
 
@@ -56,5 +63,11 @@ Do not claim live payments, measured time savings, or broad customer adoption
 that the current build and evidence do not support. Invoice-status syncing is
 deployed. Actual signed Sandbox created, updated, sent, and paid notifications
 are verified, including automatic paid-status persistence after buyer checkout
-for a USD 320.00 invoice. The complete authenticated browser workflow still needs
-verification.
+for a USD 320.00 invoice. A second-account browser run verified audio upload,
+transcription, AI extraction, approval, and Sandbox draft creation. The owner
+completed send confirmation and payment; the agent verified their results and
+automatic paid-status sync. Microphone transcription was checked separately.
+The owner also verified native refresh/close warnings in normal production Chrome
+tabs, and send cancellation in a local owner session with unchanged database
+state. Unrelated judge email delivery and physical-phone testing remain acceptance
+gates. See the walkthrough for exact evidence limits.
