@@ -1,7 +1,7 @@
 # PayPal AI Hackathon Submission
 
 Requirements checked against the [official rules](https://paypalaihackathon.devpost.com/rules)
-on October 10, 2026. Also review the
+on November 2, 2026. Also review the
 [FAQ](https://paypalaihackathon.devpost.com/details/faqs) and
 [resources](https://paypalaihackathon.devpost.com/resources) before submitting.
 
@@ -14,21 +14,25 @@ Keep judge access available without charge through **December 15, 2026,
 - [x] Add a recognizable open-source license at the repository root: MIT.
 - [x] Document the live URL, setup, and test walkthrough.
 - [ ] Complete the production acceptance record in JUDGE_WALKTHROUGH.md.
-- [ ] Verify a new judge can sign in without deployment or email restrictions.
-- [ ] Supply approved judge access and Sandbox testing details where needed.
-- [ ] Keep hosting, authentication email delivery, and AI access funded/available
+- [x] Verify hosted Google login/sign-out with a second account outside Google's test-user list (November 2; existing FieldNote account).
+- [ ] Verify a completely new Google account's signup, empty-workspace setup, and sample draft flow.
+- [x] Prepare Google access, sample setup, draft-only steps, and optional Sandbox testing instructions in JUDGE_INSTRUCTIONS.md and DEVPOST_DRAFT.md.
+- [ ] Add the reviewed judge instructions and any necessary assisted Sandbox access details to the submission form.
+- [ ] Keep hosting, Google authentication, and AI access funded/available
       throughout judging.
 - [x] Review current source and reachable commit history for secrets (October 10; repeat before publication if content changes).
 - [ ] Make the repository public before submission, with the owner's approval.
 - [ ] Record functioning app footage in English, under three minutes.
 - [ ] Publish the video publicly on YouTube and add its URL to Devpost.
-- [ ] Complete the English project description and testing instructions.
+- [x] Prepare the English project description and Google testing-instructions draft (not submitted).
+- [ ] Review and enter the final English description and testing instructions in Devpost.
 - [ ] Verify meaningful AI and PayPal Sandbox use are visible in the submission.
 
 The repository remains private for now. These documents are preparation, not a
-submitted entry or a declaration that judge access is ready.
+submitted entry or a declaration that every acceptance check has passed.
 
-Prepared materials: [demo script](DEMO_SCRIPT.md),
+Prepared materials: [judge instructions](JUDGE_INSTRUCTIONS.md),
+[demo script](DEMO_SCRIPT.md),
 [Devpost description draft](DEVPOST_DRAFT.md), and
 [physical-phone checklist](MOBILE_ACCEPTANCE.md). These are local drafts;
 no Devpost fields, repository visibility, or video publication were changed.
@@ -69,5 +73,8 @@ completed send confirmation and payment; the agent verified their results and
 automatic paid-status sync. Microphone transcription was checked separately.
 The owner also verified native refresh/close warnings in normal production Chrome
 tabs, and send cancellation in a local owner session with unchanged database
-state. Unrelated judge email delivery and physical-phone testing remain acceptance
-gates. See the walkthrough for exact evidence limits.
+state. Google sign-in now supplies the judging access route without relying on
+general email delivery. A completely new Google account's setup flow and
+physical-phone testing remain acceptance gates. See the walkthrough for exact
+evidence limits. General email-link delivery still needs custom SMTP if offered
+as a judging alternative.

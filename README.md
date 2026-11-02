@@ -8,7 +8,7 @@ price book, and create a PayPal Sandbox invoice. Prices come from the owner's
 catalog, not from the model.
 
 [Live app](https://fieldnote-lime.vercel.app) |
-[Judge walkthrough](docs/JUDGE_WALKTHROUGH.md) |
+[Judge instructions](docs/JUDGE_INSTRUCTIONS.md) |
 [Submission checklist](docs/HACKATHON_SUBMISSION.md) |
 [Demo script](docs/DEMO_SCRIPT.md)
 
@@ -41,9 +41,10 @@ status can be refreshed from PayPal; automatic updates require the
 
 ## Try the demo
 
-Open the [sign-in page](https://fieldnote-lime.vercel.app/login). Authentication
-supports Google sign-in once the provider is configured, as well as email links;
-open an email link in the same browser and profile that requested it.
+Open the [sign-in page](https://fieldnote-lime.vercel.app/login) and choose
+**Continue with Google** using your own Google account. Google sign-in is
+configured and verified on the hosted app. General email-link delivery is not
+configured; use Google for judging.
 Each account has its own workspace. Sample customers and prices are not
 automatically copied into new accounts.
 
@@ -53,18 +54,19 @@ Gmail access. Its OAuth client secret belongs in Supabase's provider settings,
 not in application source or a public environment variable. General email-link
 delivery still requires custom SMTP; adding Google does not configure email.
 
-The [walkthrough](docs/JUDGE_WALKTHROUGH.md) includes a small plumbing price book,
-a sample note, and a $320 expected invoice after review. Judge email delivery and
-physical-phone behavior still need a fresh pre-submission test. The hosted
-second-account workflow through Sandbox payment and paid-status sync has been
-verified; the walkthrough records its manual and automated evidence. See the
-submission checklist for the access preflight; no shared credentials or secrets
-are published here.
+The [judge instructions](docs/JUDGE_INSTRUCTIONS.md) include the exact customer
+and price-book setup for a fresh workspace, a sample note, and a $320 expected
+invoice after review. The primary test ends at an unsent Sandbox draft and needs
+no PayPal login. Optional payment testing uses a Sandbox buyer you control.
+The [acceptance record](docs/JUDGE_WALKTHROUGH.md) documents Google login with an
+existing second account outside Google's test-user list and the prior workflow
+through Sandbox payment and paid-status sync. A completely new Google account's
+full setup run and physical-phone acceptance still need pre-submission checks.
 
 ## Stack
 
 - Next.js App Router, React, TypeScript, and Tailwind CSS
-- Supabase Postgres and passwordless Auth
+- Supabase Postgres and Auth with Google sign-in and email-link support
 - Vercel AI Gateway with OpenAI transcription and structured output
 - PayPal Invoicing API v2
 - Vercel hosting
@@ -125,9 +127,10 @@ keys. Only the Supabase project URL, publishable key, and site URL use the
 5. For the hosted app, allow
    `https://fieldnote-lime.vercel.app/auth/callback` and use the hosted origin as
    the site URL. Use your own domain when deploying a separate copy.
-6. Verify email delivery to a new tester before sharing access. Configure
-   appropriate email delivery or approved test recipients if the project's mail
-   configuration limits who can receive sign-in links.
+6. For Google sign-in, follow [the provider setup guide](docs/GOOGLE_SIGN_IN.md)
+   and verify the deployed callback and a new tester's workspace. If offering
+   email links to general users, configure custom SMTP and verify delivery
+   separately; it is not required for the Google route.
 
 Database row-level security restricts customers, catalog items, notes, line
 items, and invoice records to their owner. Customer selection is manual; AI does

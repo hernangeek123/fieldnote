@@ -1,6 +1,6 @@
 # FieldNote Devpost Draft
 
-Prepared October 10, 2026. This is editable submission copy, not a published
+Updated November 2, 2026. This is editable submission copy, not a published
 entry. Verify the final wording against the footage and acceptance record.
 
 ## Project Name
@@ -40,7 +40,7 @@ price book changes later. Each signed-in account has an isolated workspace.
 ## How We Built It
 
 The application uses Next.js App Router, React, TypeScript, and Tailwind CSS.
-Supabase provides passwordless authentication and Postgres, with row-level
+Supabase provides Google sign-in, email-link authentication, and Postgres, with row-level
 security enforcing record ownership. Server-side application actions handle
 authenticated mutations and invoice operations.
 
@@ -76,6 +76,9 @@ desktop microphone recording was transcribed and its text saved. Hosted editing
 checks preserved the original paid invoice while customer and catalog details
 were temporarily changed and restored.
 
+Google sign-in and sign-out were verified on the hosted app with an existing
+second account outside Google's test-user list, preserving its workspace.
+
 Regression and rollback-only database tests cover invoice safeguards, webhook
 handling, and ownership protection. Browser viewport checks cover narrow layouts;
 they are not a substitute for physical-phone testing.
@@ -88,9 +91,9 @@ recipient handling matter as much as generating the initial suggestions.
 
 ## What's Next
 
-Before submission, finish physical-phone acceptance and general judge sign-in
-email delivery. Future work could include
-tax and discount support, additional currencies, and better draft recovery.
+Before submission, finish physical-phone acceptance and a completely new Google
+account's setup and sample draft test. Future work could include general email
+delivery, tax and discount support, additional currencies, and better draft recovery.
 These are planned improvements, not current capabilities.
 
 ## Built With
@@ -103,11 +106,48 @@ Vercel AI Gateway, OpenAI, PayPal Invoicing API v2.
 - App: https://fieldnote-lime.vercel.app
 - Repository: https://github.com/hernangeek123/fieldnote (private until owner-approved publication).
 - Video: pending recording and owner-approved public YouTube upload.
-- Detailed setup and sample USD 320.00 job: README.md and JUDGE_WALKTHROUGH.md.
+- Judge instructions: [JUDGE_INSTRUCTIONS.md](JUDGE_INSTRUCTIONS.md).
+- Technical setup: [README.md](../README.md). Dated verification: [JUDGE_WALKTHROUGH.md](JUDGE_WALKTHROUGH.md).
 
-Judge-access text is not ready for publication. Custom SMTP is not configured;
-unrelated judges cannot yet be assumed to receive sign-in links. Once configured
-and tested, explain email-link sign-in in the same browser/profile and the
-isolated empty workspace. Supply any necessary controlled Sandbox testing access
-through an approved private channel, never public production secrets or personal
-mailbox credentials. Do not submit until a judge can actually test the build.
+### Testing Instructions For The Submission Form
+
+Open https://fieldnote-lime.vercel.app/login and choose **Continue with Google**
+using your own Google account. Google may display
+`hhawqwpdljfdookbzagz.supabase.co`, FieldNote's authentication service. Consent
+requests name, email, and profile picture. Use Google rather than the email-link
+option; general email delivery is not configured.
+
+Your account has an isolated workspace with no automatic sample data. In
+**Customers**, add **Demo Plumbing Customer**, using
+`sb-jhla153143388@personal.example.com` as the synthetic PayPal Sandbox recipient.
+Leave phone and address blank. In **Price book**, add **Chrome kitchen faucet**
+at **$120.00 per each**, **Supply line** at **$15.00 per each**, and **Plumbing
+labor** at **$85.00 per hour**.
+
+Choose **New note**, select the customer, and record this example:
+"Replaced the kitchen faucet. Used one chrome kitchen faucet and two supply
+lines. Completed two hours of plumbing labor." Stop and transcribe the recording,
+correct the text, and choose **Save draft**. You can also upload short audio or
+type the example to exercise the text path.
+
+Choose **Generate with AI** and review all rows. The expected reviewed quantities
+are one faucet, two supply lines, and two hours of labor, totaling **USD 320.00**.
+Correct suggestions if needed, choose **Approve note**, then **Create PayPal
+draft**. Check the recipient, invoice number, draft status, and total in
+FieldNote. **Refresh status** and reload should preserve the invoice number and
+locked review. Stop here for the main test; creating a draft does not send it
+and requires no PayPal login.
+
+Optional sending/payment uses a new invoice addressed to a Sandbox Personal
+buyer you control. **Send invoice** asks for confirmation; **View payment page**
+opens checkout after sending. Use Sandbox test funds. Reload FieldNote afterward
+to inspect paid status; **Refresh status** is manual reconciliation. Detailed
+steps and troubleshooting are in the repository's judge instructions. For access
+problems, contact the submitter through Devpost with the visible error.
+
+### Submission Preflight
+
+This copy is prepared, not posted to Devpost. Google login was verified with an
+existing second account outside Google's test-user list; a brand-new account's
+complete setup run and physical-phone acceptance remain pending. Confirm those
+results, add the final public repository/video links, and review before submission.

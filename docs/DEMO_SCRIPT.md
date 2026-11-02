@@ -5,6 +5,8 @@ footage. Show the working app, with all payments clearly identified as Sandbox.
 
 ## Before Recording
 
+- Sign in with **Continue with Google**. The [judge instructions](JUDGE_INSTRUCTIONS.md)
+  explain access and the fresh-workspace setup; general email delivery is not configured.
 - Use the existing second-account demo workspace, not the owner's mixed sample
   records. Keep Demo Plumbing Customer and the three services below unchanged.
 - Confirm the customer uses the controlled Sandbox Personal buyer. Never show

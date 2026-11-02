@@ -81,7 +81,9 @@ Scanner source and usage: https://github.com/gitleaks/gitleaks
   screen recordings, external attachments, GitHub caches, or deleted remote refs.
 - Do not include real customer information, mailbox contents, sign-in links,
   API secrets, or personal Sandbox login credentials in public instructions.
-- Configure and verify general judge email delivery; complete physical-phone
-  acceptance and final video review. These release gates remain pending.
+- Use the verified Google judging route and repeat its preflight before
+  submission, including a completely new account's setup flow. Complete
+  physical-phone acceptance and final video review. General email delivery
+  requires custom SMTP only if offered as an alternative login method.
 - Obtain owner approval before changing repository visibility or publishing video
   or submission materials. This review changes none of those settings.

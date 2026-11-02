@@ -4,23 +4,31 @@ This is a reproducible acceptance-test recipe, not a claim that every step has
 already passed in production. All invoices in this walkthrough use PayPal
 Sandbox; there are no real-money payments.
 
+Judges should start with the shorter [judge instructions](JUDGE_INSTRUCTIONS.md).
+The dated sections below preserve verification history; older pending findings
+describe that run and may be superseded by later entries.
+
 ## Access
 
-Open [FieldNote](https://fieldnote-lime.vercel.app/login) and request an email
-sign-in link. Open the latest link in the same browser and profile. A new account
-starts with an isolated workspace, not the owner's sample data.
+Open [FieldNote](https://fieldnote-lime.vercel.app/login), choose **Continue with
+Google**, and use your own Google account. Consent requests only name, email,
+and profile information for `hhawqwpdljfdookbzagz.supabase.co`. A new account starts
+with an isolated workspace, not the owner's sample data. General email delivery
+is not configured; it is not the judge access route.
 
-Before submission, the owner must verify delivery to an unrelated test email
-address. If access requires an approved recipient or a dedicated judge account,
-provide the approved access method in Devpost's testing instructions. Do not
-publish mailbox passwords, API secrets, or a sign-in link in this repository.
-Hosted judge access is not yet certified by this checklist.
+Hosted Google login, existing-account linking, the return path, and sign-out
+were verified on November 2 with the second account outside Google's test-user
+list. A completely new Google account's first workspace/setup flow remains a
+separate pre-submission check. Do not publish mailbox passwords, API secrets,
+or sign-in links in the repository or testing copy.
 
 ## Sample Customer
 
-In **Customers**, add a customer named **Demo Plumbing Customer**. For the email,
-use a PayPal Sandbox Personal account you control. Phone and service address may
-be left blank. Do not use a real customer's details.
+In **Customers**, add **Demo Plumbing Customer** with the synthetic Sandbox
+recipient `sb-jhla153143388@personal.example.com` for an unsent draft-only test.
+For optional independent payment testing, create a separate customer using a
+Sandbox Personal buyer you control before creating that invoice. Phone and
+service address may be left blank. Do not use a real customer's details.
 
 The sign-in email belongs to the FieldNote tester; the customer email belongs to
 the Sandbox invoice recipient. They serve different purposes.
@@ -45,7 +53,7 @@ Customer and service pencil buttons open editors with **Save changes** and
 available for new matches. Editing the price book does not reprice saved line
 items. Customer changes do not update a reserved PayPal invoice or its recipient.
 
-1. Open **New field note**, select **Demo Plumbing Customer**, and use today's date.
+1. Choose **New note**, select **Demo Plumbing Customer**, and use today's date.
 2. Choose **Record note**, allow microphone access, and speak the example below;
    then choose **Stop recording**. Alternatively, upload a short supported audio
    file under 4 MB.
@@ -56,7 +64,7 @@ items. Customer changes do not update a reserved PayPal invoice or its recipient
 5. Choose **Generate with AI**.
 6. Review every row. If an item is unmatched or flagged, choose its price-book
    entry and correct its description, quantity, and price.
-7. Save the review if needed, then choose the approval action.
+7. Correct the review if needed, then choose **Approve note**.
 
 Example note:
 
@@ -78,37 +86,41 @@ problems, but does not count as testing transcription.
 
 ## PayPal Draft
 
-1. After approval, use the PayPal panel to create the Sandbox invoice draft.
-2. Confirm an invoice ID and **DRAFT** status appear.
-3. Open the invoice in PayPal using the Sandbox merchant account. Check the
+1. After approval, choose **Create PayPal draft**.
+2. Confirm the invoice number and draft status appear in FieldNote; check the
    recipient, three reviewed items, USD currency, and $320.00 total.
-4. Refresh the FieldNote note. The same invoice ID should remain; no second draft
-   should be created and the review editor should be locked.
+3. Merchant inspection through **Open in PayPal** is optional and requires
+   separate Sandbox merchant access. Judges can inspect the result in FieldNote.
+4. Choose **Refresh status** and reload the note. The same invoice number should
+   remain; no second draft should be created and the review editor should be locked.
 5. Return to the workspace and confirm the saved note is still present.
 
 Creating a draft should not send the invoice. The note remains reviewed at this
-stage; it becomes invoiced after sending. Keep **Send** untouched during a
+stage; it becomes invoiced after sending. Keep **Send invoice** untouched during a
 draft-only acceptance test.
 
 ## Optional Send Test
 
-Use only the controlled Sandbox recipient. Choose **Send**, cancel the first
-confirmation, and check that the draft remains unchanged. Then choose **Send**
-again and confirm. Verify the invoice's resulting status in PayPal and the
-note's invoiced state in FieldNote.
+Use a new invoice addressed to a Sandbox buyer you control. Choose **Send
+invoice**, cancel the first confirmation, and check that the draft remains
+unchanged. Then choose **Send invoice** again and confirm the intended Sandbox
+recipient. Verify sent status and the note's invoiced state in FieldNote.
 
 Sending invokes PayPal's Sandbox delivery flow. Do not present this as a real
-customer receiving a live invoice. Automatic payment-status updates require a
-configured and verified webhook. Use **Refresh
-status** to reconcile the invoice manually, and inspect payment results in PayPal
-if testing Sandbox payment.
+customer receiving a live invoice. For payment, choose **View payment page** and
+complete checkout yourself with your Sandbox buyer. The hosted webhook is
+configured and has verified paid-status updates. Reload the note to inspect
+webhook-driven status before using **Refresh status**, which is manual
+reconciliation. No Sandbox credentials are needed for the main draft-only test.
 
 ## Acceptance Record
 
 For each run, record the date, deployment/commit, browser, outcome, and redacted
 evidence. Do not include email links, access tokens, passwords, or customer PII.
 
-- [ ] New tester can receive a sign-in link and enter the workspace.
+- [x] Google login, existing-account linking, return path, and sign-out work for a second account outside Google's test-user list (November 2).
+- [ ] A completely new Google account can sign up and complete the empty-workspace setup and sample draft flow.
+- [ ] Complete physical-phone acceptance using Google sign-in (MOBILE_ACCEPTANCE.md).
 - [x] Customer and price-book entries persist after reload (October 10 hosted editing check).
 - [x] Recording or upload produces an editable transcript (synthetic WAV upload and owner-recorded microphone WebM both verified).
 - [x] Saved note preserves the selected customer and corrected text.
@@ -602,3 +614,20 @@ exception while the Google app remains External/Testing. This does not certify
 every organization's managed Google accounts, physical-phone behavior, or general
 email delivery. No invoice, payment, customer, or note was created or modified,
 and repository visibility remains private.
+
+### November 2 Judge Instructions Update
+
+Added JUDGE_INSTRUCTIONS.md as the short judge-facing entry point and updated
+the README, Devpost draft, submission checklist, phone checklist, and demo
+preflight to use Google sign-in. The guide explicitly explains empty workspaces,
+manual sample setup, the reviewed USD 320.00 job, and the primary unsent-draft
+test without a merchant login. A read-only lookup confirmed the existing
+synthetic Demo Plumbing Customer recipient used in that example. No Sandbox
+passwords, API keys, or sign-in links are included.
+
+Optional sending/payment uses a separate invoice for a Sandbox buyer controlled
+by the tester. The instructions distinguish webhook updates from manual status
+refresh and retain the fresh-Google-account and physical-phone checks as pending.
+This documentation update did not create an account, customer, service, note,
+invoice, or payment. The Devpost text remains a draft; no entry, video, or
+repository-visibility change was published.

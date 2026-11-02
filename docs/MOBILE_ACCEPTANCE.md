@@ -8,9 +8,11 @@ browser lifecycle behavior.
 
 Use a phone you control and synthetic demo data. Record the phone model, OS,
 browser/version, date, and tested deployment. Open the hosted app, not localhost.
-Use an existing owner-controlled test account; general judge email delivery is
-still pending custom SMTP setup. Request and open the latest email link in the
-same phone browser/profile. Do not share the sign-in URL or any password.
+Choose **Continue with Google** and use an existing owner-controlled test account
+to inspect its prepared sample data. Consent requests name, email, and profile
+information for FieldNote's Supabase service. General email delivery is not the
+test route. For a fresh workspace, follow [the judge instructions](JUDGE_INSTRUCTIONS.md)
+to add the sample customer and price book. Do not share sign-in links or passwords.
 
 ## Capture And Review
 

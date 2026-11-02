@@ -3,6 +3,8 @@
 Google sign-in uses Supabase's OAuth flow and the existing `/auth/callback` code
 exchange. Email links remain available but still require custom SMTP for general
 delivery. A purchased app domain is not required for the Google sign-in route.
+For hosted testing, follow [the judge instructions](JUDGE_INSTRUCTIONS.md);
+the account setup below is for maintainers deploying their own copy.
 
 ## Account Setup
 
