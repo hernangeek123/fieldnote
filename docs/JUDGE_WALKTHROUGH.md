@@ -511,3 +511,76 @@ release, and owner-approved repository/video publication.
 References: [Supabase SMTP restrictions](https://supabase.com/docs/guides/auth/auth-smtp),
 [browser warning limitations](https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event),
 [Resend verified domains](https://resend.com/docs/dashboard/domains/introduction).
+
+### November 2 Google Sign-In Implementation
+
+The owner deferred buying a domain and explicitly requested Google sign-in.
+The live Supabase configuration was inspected: email sign-in and email
+confirmation are enabled, custom SMTP is off, and the Google provider is disabled.
+Those settings have not yet been changed by this implementation.
+
+The owner approved creating a dedicated Google Cloud project named FieldNote,
+with no organization, no billing account selected, and no paid services enabled.
+Google confirmed creation of `fieldnote-513517`. The owner also approved using
+their existing Google account address for support and developer contact. The
+consent wizard was prepared with FieldNote branding and an External audience,
+then handed to the owner at Google's User Data Policy agreement step. The owner
+completed the agreement and creation; Google displayed **OAuth configuration
+created!**. A Web application client form named **FieldNote Web** was prepared
+with the hosted and localhost origins and the exact Supabase callback. The
+Google provider form was opened in Supabase, with no credentials entered by
+the agent. Credential creation and entry were handed to the owner.
+
+Local application changes add **Continue with Google**, preserving email links.
+The server action uses the existing SSR cookie client and callback, requests
+only basic identity scopes, validates return paths, and handles provider/network
+errors without displaying provider details. Google cancellation returns safely
+to the login page. Buttons expose pending/disabled states and use Google's
+official branding asset.
+
+All 40 regression tests, lint, and the production build including TypeScript
+passed. Five authentication HTTP checks passed against localhost. The full
+local smoke suite additionally returned 503 rather than 401 for the unsigned
+webhook because local webhook credentials are not configured; this is the
+expected fail-closed local configuration, not a Google sign-in failure. The
+hosted webhook check passed earlier on November 2 before these source changes.
+
+OAuth credentials, Supabase Google enablement, real Google
+account sign-in, responsive checks, and deployment remain pending. No sign-in
+email, invoice, payment, repository-visibility change, or publication was made.
+Do not certify unrelated judge access from the implementation checks alone.
+
+The owner subsequently entered OAuth credentials directly in Supabase. A refreshed
+provider list still showed Google disabled; credential-presence checks confirmed
+both fields were saved without displaying either value. With the owner's
+explicit approval, the agent enabled the provider and turned **Skip nonce checks**
+off before saving. Supabase displayed **Google Enabled**. Allowing users without
+an email remained off; no other providers, ownership policies, or email settings
+were changed.
+
+Google showed an External audience in Testing with zero test users. The existing
+Vercel homepage was added to Branding and Google confirmed it was saved. Google's
+audience documentation explicitly exempts basic identity-only sign-in requests
+from the usual testing allowlist rule. No additional API scopes or users were
+added. The local button reached Google's real account chooser, requesting only
+email, profile, and OpenID identity scopes. The owner was asked to select the
+existing second-account tester, outside the Google project/test-user list, and
+complete consent. Actual callback/session verification remains pending.
+
+Two narrow-viewport override attempts did not change the observed page width
+(1280 pixels); one full-page screenshot also timed out. Overrides were reset and
+the duplicate test tab closed. These attempts do not certify the new login page
+at phone widths. Desktop rendering and the Google branding image were observed,
+but physical-phone acceptance remains pending.
+
+The first owner-reported completion landed on the public homepage and did not
+create a Google identity. The flow was repeated from localhost with the safe
+return path `/app/notes`. The account chooser selected the approved second
+account, and Google's consent screen showed only name, profile picture, and
+email. After continuation, FieldNote opened the intended notes page displaying
+that account and its existing three notes. Supabase confirmed both `email` and
+`google` identities on the existing account and a fresh sign-in at
+2026-11-02 17:43:22 UTC. Sign-out was followed by a private-page visit that
+returned to the login form. No customer, note, or invoice records were changed.
+This verifies local OAuth, account linking, return-path handling, and sign-out;
+the hosted release check remains pending.

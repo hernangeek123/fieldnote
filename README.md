@@ -42,9 +42,16 @@ status can be refreshed from PayPal; automatic updates require the
 ## Try the demo
 
 Open the [sign-in page](https://fieldnote-lime.vercel.app/login). Authentication
-uses an email link; open it in the same browser and profile that requested it.
+supports Google sign-in once the provider is configured, as well as email links;
+open an email link in the same browser and profile that requested it.
 Each account has its own workspace. Sample customers and prices are not
 automatically copied into new accounts.
+
+Google setup and verification requirements are in
+[Google sign-in](docs/GOOGLE_SIGN_IN.md). Google identity scopes do not grant
+Gmail access. Its OAuth client secret belongs in Supabase's provider settings,
+not in application source or a public environment variable. General email-link
+delivery still requires custom SMTP; adding Google does not configure email.
 
 The [walkthrough](docs/JUDGE_WALKTHROUGH.md) includes a small plumbing price book,
 a sample note, and a $320 expected invoice after review. Judge email delivery and
@@ -209,3 +216,5 @@ security certification. Publication and judge-access setup remain pending.
 ## License
 
 [MIT](LICENSE). Third-party dependencies remain covered by their own licenses.
+Google's sign-in branding asset remains subject to Google's branding guidelines,
+not this repository's MIT license; see the Google sign-in setup document.

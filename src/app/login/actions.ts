@@ -5,8 +5,21 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { safeRedirectPath } from "@/lib/auth/redirect-path";
+import { googleSignInError, startGoogleSignIn } from "@/lib/auth/google-sign-in";
 
 const emailSchema = z.email();
+
+export async function signInWithGoogle(formData: FormData) {
+  const headerStore = await headers();
+  const origin = headerStore.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL;
+  const result = await startGoogleSignIn(origin, formData.get("next"),
+    async (options) => (await createClient()).auth.signInWithOAuth(options));
+  if (!result.url) redirect(`/login?${new URLSearchParams({
+    error: result.error ?? googleSignInError,
+    next: safeRedirectPath(formData.get("next")),
+  })}`);
+  redirect(result.url);
+}
 
 export async function signIn(formData: FormData) {
   const parsedEmail = emailSchema.safeParse(formData.get("email"));
