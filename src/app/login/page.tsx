@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowLeft, Mail, ShieldCheck } from "lucide-react";
+import { Mail, ShieldCheck } from "lucide-react";
 import { signIn, signInWithGoogle } from "./actions";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 import { LoginSubmitButton } from "@/components/login-submit-button";
@@ -25,14 +24,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <div className="flex min-h-screen flex-col bg-[#f3f5f2] text-[#17201a]">
     <main className="flex-1 px-5 py-8 sm:px-8">
       <div className="mx-auto max-w-md">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#4f5b52] hover:text-[#17201a]"
-        >
-          <ArrowLeft size={17} aria-hidden="true" />
-          Back to FieldNote
-        </Link>
-
         <section className="mt-16">
           <div className="flex size-11 items-center justify-center rounded-md bg-[#176b3a] text-white">
             <Mail size={21} aria-hidden="true" />
