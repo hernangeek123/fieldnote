@@ -75,8 +75,14 @@ policies or ownership fields.
   or another access method explicitly provided to judges. An owner-only test is
   not sufficient to certify this.
 
-Setup and end-to-end status are recorded in JUDGE_WALKTHROUGH.md. Until those
-checks pass, do not present the provider as configured or judge access as ready.
+On November 2, 2026, Google sign-in was verified on localhost and the live Vercel
+site using an existing second account outside Google's test-user list. The
+callback returned to `/app/notes`, Supabase linked the Google identity to the
+existing email account, and sign-out protected the workspace again. All 40
+regression tests, lint, the production build, and six hosted HTTP checks passed.
+Google remains External/Testing with identity scopes only and zero test users;
+no Gmail, Drive, or offline access is requested. Physical-phone acceptance is
+still pending. Detailed evidence is recorded in JUDGE_WALKTHROUGH.md.
 
 ## Google Button Asset
 

@@ -584,3 +584,21 @@ that account and its existing three notes. Supabase confirmed both `email` and
 returned to the login form. No customer, note, or invoice records were changed.
 This verifies local OAuth, account linking, return-path handling, and sign-out;
 the hosted release check remains pending.
+
+Commit `e7b94dc` was pushed to the private repository and Vercel's Git
+integration released production deployment `dpl_HgR6hzUzctvUWyeZVMfuhHMYFh4U`
+to `https://fieldnote-lime.vercel.app`. All six hosted HTTP checks passed,
+including both login methods rendering, private-route protection, safe callback
+errors, Google cancellation, external-redirect rejection, and unsigned webhook
+rejection. A real Google login on the hosted site returned to `/app/notes`
+displaying the approved second account and its existing three notes. Supabase
+recorded the hosted sign-in at 2026-11-02 17:46:38 UTC. After sign-out, revisiting
+the private notes URL returned to login. The deployment's error/fatal runtime-log
+query returned no groups during this verification window. Screenshots were kept
+outside the repository; no authentication secrets were added to source.
+
+Google access is verified for this non-test-list account with the basic identity
+exception while the Google app remains External/Testing. This does not certify
+every organization's managed Google accounts, physical-phone behavior, or general
+email delivery. No invoice, payment, customer, or note was created or modified,
+and repository visibility remains private.

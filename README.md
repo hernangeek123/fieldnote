@@ -204,14 +204,16 @@ alone does not establish that authentication, AI, and PayPal work together.
   See the webhook setup notes.
 - A creation attempt freezes its data, including failed or ambiguous attempts.
   Create a new note if the invoice details need correction.
-- Shared judge accounts, one-click sample-data provisioning, and general email
-  delivery readiness have not yet been verified for submission.
+- Google sign-in is verified on the live Vercel site using a second account
+  outside Google's test-user list. General email delivery still needs custom
+  SMTP, and one-click sample-data provisioning is not implemented.
 
 ## Security Review
 
 The [pre-publication review](docs/PREPUBLICATION_REVIEW.md) records the scoped
 secret/history scans and sign-in redirect hardening. It is not a comprehensive
-security certification. Publication and judge-access setup remain pending.
+security certification. Publication remains pending. Google judge access has a
+verified login path; physical-phone acceptance remains pending.
 
 ## License
 
