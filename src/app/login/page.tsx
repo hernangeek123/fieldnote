@@ -4,6 +4,7 @@ import { signIn, signInWithGoogle } from "./actions";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 import { LoginSubmitButton } from "@/components/login-submit-button";
 import { safeRedirectPath } from "@/lib/auth/redirect-path";
+import { SiteFooter } from "@/components/site-footer";
 
 type LoginPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -21,7 +22,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const needsSetup = getParam(params.setup) === "missing" || !hasSupabaseEnv();
 
   return (
-    <main className="min-h-screen bg-[#f3f5f2] px-5 py-8 text-[#17201a] sm:px-8">
+    <div className="flex min-h-screen flex-col bg-[#f3f5f2] text-[#17201a]">
+    <main className="flex-1 px-5 py-8 sm:px-8">
       <div className="mx-auto max-w-md">
         <Link
           href="/"
@@ -94,5 +96,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </section>
       </div>
     </main>
+    <SiteFooter />
+    </div>
   );
 }

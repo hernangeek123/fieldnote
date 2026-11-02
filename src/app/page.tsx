@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowRight, Check, Mic, ReceiptText } from "lucide-react";
+import { SiteFooter } from "@/components/site-footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f3f5f2] text-[#17201a]">
+    <div className="flex min-h-screen flex-col bg-[#f3f5f2] text-[#17201a]">
       <header className="border-b border-[#d7ddd7] bg-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
           <p className="text-xl font-semibold">FieldNote</p>
@@ -16,6 +17,7 @@ export default function Home() {
         </div>
       </header>
 
+      <main className="flex-1">
       <section className="mx-auto max-w-6xl px-5 pb-12 pt-14 sm:px-8 sm:pt-20">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold text-[#377348]">Field notes to PayPal invoices</p>
@@ -49,6 +51,8 @@ export default function Home() {
           ))}
         </div>
       </section>
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

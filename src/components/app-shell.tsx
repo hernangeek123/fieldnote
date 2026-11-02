@@ -8,6 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { signOut } from "@/app/app/actions";
+import { SiteFooter } from "@/components/site-footer";
 
 const navigation = [
   { href: "/app", label: "Overview", icon: LayoutDashboard },
@@ -22,7 +23,7 @@ export function AppShell({
 }: Readonly<{ email: string; children: React.ReactNode }>) {
   return (
     <NavigationGuardProvider>
-    <div className="min-h-screen bg-[#f3f5f2] text-[#17201a]">
+    <div className="flex min-h-screen flex-col bg-[#f3f5f2] text-[#17201a]">
       <header className="sticky top-0 z-20 border-b border-[#d7ddd7] bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
           <Link href="/app" className="text-xl font-semibold">
@@ -38,8 +39,8 @@ export function AppShell({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl sm:grid-cols-[210px_1fr]">
-        <aside className="hidden min-h-[calc(100vh-4rem)] border-r border-[#d7ddd7] bg-white px-4 py-6 sm:flex sm:flex-col">
+      <div className="mx-auto grid w-full max-w-7xl flex-1 sm:grid-cols-[210px_1fr]">
+        <aside className="hidden border-r border-[#d7ddd7] bg-white px-4 py-6 sm:flex sm:flex-col">
           <nav className="space-y-1" aria-label="Workspace navigation">
             {navigation.map(({ href, label, icon: Icon }) => (
               <Link
@@ -67,6 +68,8 @@ export function AppShell({
           {children}
         </main>
       </div>
+
+      <SiteFooter workspace />
 
       <nav
         className="fixed inset-x-0 bottom-0 z-20 grid h-16 grid-cols-4 border-t border-[#d7ddd7] bg-white sm:hidden"
