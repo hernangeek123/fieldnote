@@ -11,7 +11,7 @@ function GenerateSubmitButton({ hasItems }: { hasItems: boolean }) {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#17201a] px-4 text-sm font-semibold text-white hover:bg-[#2c382f] disabled:cursor-wait disabled:bg-[#8fa197]"
+      className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-strong px-4 text-sm font-semibold text-white hover:bg-strong-hover disabled:cursor-wait disabled:bg-disabled-action"
     >
       <Sparkles size={17} aria-hidden="true" />
       {pending ? "Generating..." : hasItems ? "Regenerate with AI" : "Generate with AI"}

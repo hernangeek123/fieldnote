@@ -16,6 +16,10 @@ to add the sample customer and price book. Do not share sign-in links or passwor
 
 ## Capture And Review
 
+Use the footer's **Appearance** selector to check Light, Dark, and System. Confirm
+text, fields, status badges, and the selector fit in each mode. Reload after an
+explicit choice to check it persists when browser storage is enabled.
+
 1. Open Customers and Price book. Check that contact details, prices, and pencil
    buttons fit without sideways scrolling. Open an editor, then cancel without
    saving so the demo data stays unchanged.
@@ -47,6 +51,7 @@ Never use real customer details, live PayPal credentials, or real-money payment.
 | --- | --- |
 | Device, OS, browser, deployment | Pending |
 | Phone sign-in | Pending |
+| Light / Dark / System, readability and saved choice | Pending |
 | Customer and price-book editors | Pending |
 | Microphone capture and playback | Pending |
 | Live transcription | Pending |

@@ -44,12 +44,12 @@ export default async function NotesPage({ searchParams }: PageProps) {
     <div className="mx-auto max-w-5xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-[#377348]">Field notes</p>
+          <p className="text-sm font-semibold text-accent">Field notes</p>
           <h1 className="mt-1 text-3xl font-semibold">Review the work before it becomes an invoice.</h1>
         </div>
         <Link
           href="/app/notes/new"
-          className="inline-flex h-11 items-center gap-2 rounded-md bg-[#176b3a] px-4 text-sm font-semibold text-white hover:bg-[#11562e]"
+          className="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover"
         >
           <Plus size={17} aria-hidden="true" />
           New note
@@ -58,12 +58,12 @@ export default async function NotesPage({ searchParams }: PageProps) {
 
       <Notice error={first(params.error)} success={first(params.created)} />
 
-      <section className="mt-8 overflow-hidden rounded-md border border-[#d7ddd7] bg-white">
+      <section className="mt-8 overflow-hidden rounded-md border border-line bg-surface">
         {notes?.length ? (
-          <ul className="divide-y divide-[#e1e5e0]">
+          <ul className="divide-y divide-line">
             {notes.map((note) => (
               <li key={note.id}>
-                <Link href={`/app/notes/${note.id}`} className="group block p-5 hover:bg-[#f8faf8] sm:p-6">
+                <Link href={`/app/notes/${note.id}`} className="group block p-5 hover:bg-surface-muted sm:p-6">
                   <div className="flex items-start justify-between gap-5">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-3">
@@ -73,16 +73,16 @@ export default async function NotesPage({ searchParams }: PageProps) {
                         <StatusBadge status={note.status} />
                         {invoiceStatuses.has(note.id) ? <InvoiceStatusBadge status={invoiceStatuses.get(note.id)!} /> : null}
                       </div>
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#58625b]">{note.raw_note}</p>
-                      <p className="mt-3 text-xs text-[#7a847d]">
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted">{note.raw_note}</p>
+                      <p className="mt-3 text-xs text-muted">
                         {date.format(new Date(`${note.occurred_on}T00:00:00`))}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-4">
-                      <p className="font-semibold text-[#176b3a]">
+                      <p className="font-semibold text-accent">
                         {money.format((totals.get(note.id) ?? 0) / 100)}
                       </p>
-                      <ArrowRight className="text-[#758078] group-hover:text-[#176b3a]" size={18} aria-hidden="true" />
+                      <ArrowRight className="text-muted group-hover:text-accent" size={18} aria-hidden="true" />
                     </div>
                   </div>
                 </Link>
@@ -91,9 +91,9 @@ export default async function NotesPage({ searchParams }: PageProps) {
           </ul>
         ) : (
           <div className="px-6 py-16 text-center">
-            <BookOpenText className="mx-auto text-[#6b796e]" size={30} aria-hidden="true" />
+            <BookOpenText className="mx-auto text-muted" size={30} aria-hidden="true" />
             <p className="mt-4 font-semibold">No field notes yet</p>
-            <Link href="/app/notes/new" className="mt-3 inline-block text-sm font-semibold text-[#176b3a]">
+            <Link href="/app/notes/new" className="mt-3 inline-block text-sm font-semibold text-accent">
               Create the first note
             </Link>
           </div>

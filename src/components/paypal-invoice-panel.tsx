@@ -27,7 +27,7 @@ function ActionButton({ kind, retry = false }: { kind: "create" | "send" | "refr
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#176b3a] px-3 text-sm font-semibold text-white hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
+      className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-white hover:bg-primary-hover disabled:cursor-wait disabled:bg-disabled-action"
     >
       <Icon size={16} aria-hidden="true" />
       {pending ? kind === "create" ? "Creating..." : kind === "refresh" ? "Refreshing..." : "Sending..." : label}
@@ -55,26 +55,26 @@ export function PayPalInvoicePanel({
   const canSend = invoice && canSendInvoice(invoice.status) && Boolean(invoice.paypal_invoice_id);
 
   return (
-    <section className="mt-6 border-t border-[#cfd6cf] pt-5">
+    <section className="mt-6 border-t border-line pt-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold uppercase text-[#657068]">PayPal invoice</h2>
+        <h2 className="text-sm font-semibold uppercase text-muted">PayPal invoice</h2>
         {invoice ? (
           <InvoiceStatusBadge status={invoice.status} />
         ) : null}
       </div>
 
       {invoice?.invoice_number ? (
-        <p className="mt-3 text-sm font-semibold text-[#17201a]">{invoice.invoice_number}</p>
+        <p className="mt-3 text-sm font-semibold text-foreground">{invoice.invoice_number}</p>
       ) : null}
-      {customerEmail ? <p className="mt-2 break-all text-sm text-[#657068]">{customerEmail}</p> : null}
-      {invoice?.last_error ? <p className="mt-3 text-sm leading-6 text-[#9a3f34]">{invoice.last_error}</p> : null}
-      {invoice?.last_synced_at ? <p className="mt-2 text-xs text-[#657068]">Updated {new Date(invoice.last_synced_at).toLocaleString("en-US", { timeZone: "UTC" })} UTC</p> : null}
+      {customerEmail ? <p className="mt-2 break-all text-sm text-muted">{customerEmail}</p> : null}
+      {invoice?.last_error ? <p className="mt-3 text-sm leading-6 text-danger">{invoice.last_error}</p> : null}
+      {invoice?.last_synced_at ? <p className="mt-2 text-xs text-muted">Updated {new Date(invoice.last_synced_at).toLocaleString("en-US", { timeZone: "UTC" })} UTC</p> : null}
 
       {!configured ? (
-        <p className="mt-3 text-sm leading-6 text-[#657068]">PayPal Sandbox credentials are not configured.</p>
+        <p className="mt-3 text-sm leading-6 text-muted">PayPal Sandbox credentials are not configured.</p>
       ) : null}
       {noteStatus === "draft" ? (
-        <p className="mt-3 text-sm leading-6 text-[#657068]">Approve the note to create a PayPal draft.</p>
+        <p className="mt-3 text-sm leading-6 text-muted">Approve the note to create a PayPal draft.</p>
       ) : null}
 
       <div className="mt-4 space-y-2">
@@ -105,7 +105,7 @@ export function PayPalInvoicePanel({
             href={invoice.invoicer_view_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[#aeb8b0] bg-white px-3 text-sm font-semibold text-[#28332b] hover:bg-[#f4f6f4]"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-control bg-surface px-3 text-sm font-semibold text-secondary hover:bg-surface-hover"
           >
             <ExternalLink size={16} aria-hidden="true" />
             Open in PayPal
@@ -117,7 +117,7 @@ export function PayPalInvoicePanel({
             href={invoice.recipient_view_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[#aeb8b0] bg-white px-3 text-sm font-semibold text-[#28332b] hover:bg-[#f4f6f4]"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-control bg-surface px-3 text-sm font-semibold text-secondary hover:bg-surface-hover"
           >
             <ExternalLink size={16} aria-hidden="true" />
             View payment page

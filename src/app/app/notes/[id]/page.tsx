@@ -52,7 +52,7 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
 
   return (
     <div className="mx-auto max-w-6xl">
-      <Link href="/app/notes" className="inline-flex items-center gap-2 text-sm font-semibold text-[#566159] hover:text-[#176b3a]">
+      <Link href="/app/notes" className="inline-flex items-center gap-2 text-sm font-semibold text-secondary hover:text-accent">
         <ArrowLeft size={16} aria-hidden="true" />
         Field notes
       </Link>
@@ -60,11 +60,11 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
       <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-3">
-            <p className="text-sm font-semibold text-[#377348]">Review field note</p>
+            <p className="text-sm font-semibold text-accent">Review field note</p>
             <StatusBadge status={note.status} />
           </div>
           <h1 className="mt-2 text-3xl font-semibold">{customer?.name ?? "Unassigned job"}</h1>
-          <p className="mt-2 flex items-center gap-2 text-sm text-[#657068]">
+          <p className="mt-2 flex items-center gap-2 text-sm text-muted">
             <CalendarDays size={16} aria-hidden="true" />
             {date.format(new Date(`${note.occurred_on}T00:00:00`))}
           </p>
@@ -86,24 +86,24 @@ export default async function NoteReviewPage({ params, searchParams }: PageProps
             paypalInvoiceCreated={Boolean(paypalInvoice)}
           />
 
-          <section className="rounded-md border border-[#d7ddd7] bg-white p-5 sm:p-6">
+          <section className="rounded-md border border-line bg-surface p-5 sm:p-6">
             <h2 className="text-lg font-semibold">Original field note</h2>
-            <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[#4f5b52]">{note.raw_note}</p>
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-secondary">{note.raw_note}</p>
           </section>
         </div>
 
         <aside>
-          <section className="border-t border-[#cfd6cf] pt-5 lg:border-t-0 lg:pt-0">
-            <h2 className="text-sm font-semibold uppercase text-[#657068]">Customer</h2>
+          <section className="border-t border-line pt-5 lg:border-t-0 lg:pt-0">
+            <h2 className="text-sm font-semibold uppercase text-muted">Customer</h2>
             {customer ? (
-              <div className="mt-4 space-y-3 text-sm text-[#4f5b52]">
-                <p className="font-semibold text-[#17201a]">{customer.name}</p>
+              <div className="mt-4 space-y-3 text-sm text-secondary">
+                <p className="font-semibold text-foreground">{customer.name}</p>
                 {customer.email ? <p className="flex items-center gap-2"><Mail size={15} />{customer.email}</p> : null}
                 {customer.phone ? <p className="flex items-center gap-2"><Phone size={15} />{customer.phone}</p> : null}
                 {customer.address ? <p className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={15} />{customer.address}</p> : null}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-[#657068]">No customer selected.</p>
+              <p className="mt-4 text-sm text-muted">No customer selected.</p>
             )}
           </section>
           <PayPalInvoicePanel

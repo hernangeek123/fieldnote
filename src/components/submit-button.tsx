@@ -28,7 +28,7 @@ export function SubmitButton({ label, pendingLabel, icon, disabled = false, isPe
     <button
       type="submit"
       disabled={pending || disabled}
-      className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#176b3a] px-5 text-sm font-semibold text-white transition hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
+      className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-hover disabled:cursor-wait disabled:bg-disabled-action"
     >
       <Icon size={17} aria-hidden="true" />
       {pending ? pendingLabel : label}

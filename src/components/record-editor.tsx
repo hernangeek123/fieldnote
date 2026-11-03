@@ -37,12 +37,12 @@ export function RecordEditor({ name, action, fields, children }: {
             setEditing(true); setSaved(false);
             requestAnimationFrame(() => formRef.current?.querySelector<HTMLInputElement>("input")?.focus());
           }
-        }} className="inline-flex size-10 shrink-0 items-center justify-center rounded-md border border-[#bdc6be] hover:bg-[#f3f5f2] disabled:opacity-60">
+        }} className="inline-flex size-10 shrink-0 items-center justify-center rounded-md border border-control hover:bg-background disabled:opacity-60">
         {editing ? <X size={17} aria-hidden="true" /> : <Pencil size={17} aria-hidden="true" />}
       </button>
     </div>
-    {saved ? <p role="status" className="mt-3 text-sm text-[#176b3a]">Changes saved.</p> : null}
-    {editing ? <form ref={formRef} aria-label={`Edit ${name}`} className="mt-5 border-t border-[#e1e5e0] pt-5" onSubmit={async (event) => {
+    {saved ? <p role="status" className="mt-3 text-sm text-accent">Changes saved.</p> : null}
+    {editing ? <form ref={formRef} aria-label={`Edit ${name}`} className="mt-5 border-t border-line pt-5" onSubmit={async (event) => {
       event.preventDefault();
       if (busy.current) return;
       const data = new FormData(event.currentTarget);
@@ -57,10 +57,10 @@ export function RecordEditor({ name, action, fields, children }: {
     }}>
       <fieldset disabled={saving} className="min-w-0 space-y-4">
         {fields}
-        {error ? <p role="alert" className="text-sm text-[#9a3f34]">{error}</p> : null}
+        {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
         <div className="flex flex-wrap gap-3">
           <SubmitButton label="Save changes" pendingLabel="Saving..." icon="save" isPending={saving} />
-          <button type="button" onClick={close} className="h-11 rounded-md border border-[#bdc6be] px-4 text-sm font-semibold hover:bg-[#f3f5f2]">Cancel</button>
+          <button type="button" onClick={close} className="h-11 rounded-md border border-control px-4 text-sm font-semibold hover:bg-background">Cancel</button>
         </div>
       </fieldset>
     </form> : null}

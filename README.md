@@ -63,6 +63,16 @@ existing second account outside Google's test-user list and the prior workflow
 through Sandbox payment and paid-status sync. A completely new Google account's
 full setup run and physical-phone acceptance still need pre-submission checks.
 
+## Appearance
+
+The footer's **Appearance** selector offers **Light**, **Dark**, and **System**.
+System follows the device's color preference, including changes while the page
+is open. A saved choice applies before page content paints, persists across
+pages/reloads when browser storage is available, and syncs between tabs on the
+same site. Theme preferences stay in the browser, independently of the account.
+Both palettes cover forms, recording controls, review dialogs, and invoice badges;
+Google's sign-in button keeps its approved light branding.
+
 ## Stack
 
 - Next.js App Router, React, TypeScript, and Tailwind CSS

@@ -1,7 +1,7 @@
 const statusStyles = {
-  draft: "bg-[#edf0ed] text-[#566159]",
-  reviewed: "bg-[#e5f1e7] text-[#245b31]",
-  invoiced: "bg-[#e8eef7] text-[#27527a]",
+  draft: "bg-neutral-soft text-secondary",
+  reviewed: "bg-success-soft text-success",
+  invoiced: "bg-info-soft text-info",
 } as const;
 
 export function StatusBadge({ status }: { status: string }) {
@@ -16,12 +16,12 @@ export function StatusBadge({ status }: { status: string }) {
 
 export function InvoiceStatusBadge({ status }: { status: string }) {
   const style = ["PAID", "MARKED_AS_PAID"].includes(status)
-    ? "bg-[#e5f1e7] text-[#245b31]"
+    ? "bg-success-soft text-success"
     : ["CANCELLED", "FAILED"].includes(status)
-      ? "bg-[#fff0ee] text-[#8a2e25]"
+      ? "bg-danger-soft text-danger"
       : ["PARTIALLY_PAID", "PAYMENT_PENDING"].includes(status)
-        ? "bg-[#fff3d6] text-[#765513]"
-        : "bg-[#e8eef7] text-[#27527a]";
+        ? "bg-warning-soft text-warning"
+        : "bg-info-soft text-info";
   return <span title="PayPal invoice status" className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold capitalize ${style}`}>
     {status.toLowerCase().replaceAll("_", " ")}
   </span>;

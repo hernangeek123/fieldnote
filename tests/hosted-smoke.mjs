@@ -14,6 +14,11 @@ test("hosted login renders the sign-in form", async () => {
   const html = await response.text();
   assert.match(html, /Email me a sign-in link/);
   assert.match(html, /Continue with Google/);
+  assert.match(html, /Appearance/);
+  for (const mode of ["light", "dark", "system"]) {
+    assert.match(html, new RegExp(`<option value="${mode}"`));
+  }
+  assert.match(html, /fieldnote:appearance:v1/);
 });
 
 test("hosted workspace routes require sign-in", async () => {

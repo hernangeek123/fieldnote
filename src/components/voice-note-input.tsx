@@ -203,14 +203,14 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
     <div className="mt-5">
       <label className="field-label" htmlFor="raw-note">What happened on the job?</label>
 
-      <div className="border-y border-[#d7ddd7] bg-[#f7f9f6] px-4 py-5 sm:px-5">
+      <div className="border-y border-line bg-surface-muted px-4 py-5 sm:px-5">
         {!audioFile ? (
           <div className="flex flex-wrap items-center gap-3">
             {isRecording ? (
               <button
                 type="button"
                 onClick={stopRecording}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#a63c32] px-4 text-sm font-semibold text-white hover:bg-[#8f3028]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-danger-action px-4 text-sm font-semibold text-white hover:bg-danger-action-hover"
               >
                 <Square size={15} fill="currentColor" aria-hidden="true" />
                 Stop recording
@@ -220,7 +220,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
                 type="button"
                 onClick={startRecording}
                 disabled={disabled || isTranscribing}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#176b3a] px-4 text-sm font-semibold text-white hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover disabled:cursor-wait disabled:bg-disabled-action"
               >
                 <Mic size={17} aria-hidden="true" />
                 Record note
@@ -228,7 +228,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
             )}
 
             {!isRecording ? (
-              <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#aeb9af] bg-white px-4 text-sm font-semibold text-[#344039] hover:bg-[#eef2ed]">
+              <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border border-control bg-surface px-4 text-sm font-semibold text-secondary hover:bg-surface-hover">
                 <Upload size={17} aria-hidden="true" />
                 Upload audio
                 <input
@@ -244,7 +244,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
             ) : null}
 
             {isRecording ? (
-              <p className="w-24 font-mono text-sm font-semibold tabular-nums text-[#8a2e25]" aria-live="polite">
+              <p className="w-24 font-mono text-sm font-semibold tabular-nums text-danger" aria-live="polite">
                 {formatDuration(elapsedSeconds)} / 2:00
               </p>
             ) : null}
@@ -253,9 +253,9 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
           <div>
             <div className="flex items-center justify-between gap-4">
               <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
-                <FileAudio size={18} className="shrink-0 text-[#377348]" aria-hidden="true" />
+                <FileAudio size={18} className="shrink-0 text-accent" aria-hidden="true" />
                 <span className="truncate">{audioFile.name}</span>
-                <span className="shrink-0 font-normal text-[#69736c]">
+                <span className="shrink-0 font-normal text-muted">
                   {(audioFile.size / 1024).toFixed(0)} KB
                 </span>
               </p>
@@ -263,7 +263,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
                 type="button"
                 onClick={discardAudio}
                 disabled={disabled || isTranscribing}
-                className="inline-flex size-10 shrink-0 items-center justify-center rounded-md text-[#657068] hover:bg-[#e5ebe5] hover:text-[#8a2e25] disabled:opacity-50"
+                className="inline-flex size-10 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface-hover hover:text-danger disabled:opacity-50"
                 title="Discard recording"
                 aria-label="Discard recording"
               >
@@ -276,7 +276,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
                 type="button"
                 onClick={transcribeAudio}
                 disabled={disabled || isTranscribing}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#17201a] px-4 text-sm font-semibold text-white hover:bg-[#2c382f] disabled:cursor-wait disabled:bg-[#8fa197]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-strong px-4 text-sm font-semibold text-white hover:bg-strong-hover disabled:cursor-wait disabled:bg-disabled-action"
               >
                 {isTranscribing ? (
                   <LoaderCircle className="animate-spin" size={17} aria-hidden="true" />
@@ -292,7 +292,7 @@ export function VoiceNoteInput({ onStateChange, disabled = false }: {
         )}
 
         {error ? (
-          <p className="mt-4 flex items-start gap-2 text-sm text-[#8a2e25]" role="alert">
+          <p className="mt-4 flex items-start gap-2 text-sm text-danger" role="alert">
             <AlertCircle className="mt-0.5 shrink-0" size={16} aria-hidden="true" />
             {error}
           </p>

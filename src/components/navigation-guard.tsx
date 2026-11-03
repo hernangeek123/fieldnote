@@ -115,21 +115,21 @@ export function NavigationGuardProvider({ children }: { children: ReactNode }) {
       <dialog ref={dialogRef} aria-labelledby="unsaved-title" aria-describedby="unsaved-description"
         onCancel={(event) => { event.preventDefault(); setPending(null); }}
         onClose={() => setPending(null)}
-        className="m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-md border border-[#d7ddd7] bg-white p-6 text-[#17201a] shadow-xl backdrop:bg-black/40">
+        className="m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-md border border-line bg-surface p-6 text-foreground shadow-xl backdrop:bg-black/40">
         <h2 id="unsaved-title" className="text-xl font-semibold">Leave this note?</h2>
-        <p id="unsaved-description" className="mt-3 text-sm leading-6 text-[#657068]">
+        <p id="unsaved-description" className="mt-3 text-sm leading-6 text-muted">
           Your unsaved text and recording will be lost.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <button ref={keepEditingRef} type="button" onClick={() => setPending(null)}
-            className="h-11 rounded-md bg-[#176b3a] px-4 text-sm font-semibold text-white">
+            className="h-11 rounded-md bg-primary px-4 text-sm font-semibold text-white">
             Keep editing
           </button>
           <button type="button" onClick={() => {
             const proceed = pending?.proceed;
             setBlocked(false);
             proceed?.();
-          }} className="min-h-11 rounded-md border border-[#d7ddd7] px-4 py-2 text-sm font-semibold text-[#8a2e25]">
+          }} className="min-h-11 rounded-md border border-line px-4 py-2 text-sm font-semibold text-danger">
             Leave without saving
           </button>
         </div>

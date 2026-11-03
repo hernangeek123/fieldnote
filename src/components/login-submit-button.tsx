@@ -9,9 +9,9 @@ export function LoginSubmitButton({ provider, disabled }: { provider: "google" |
   const google = provider === "google";
   return (
     <button type="submit" disabled={disabled || pending} aria-busy={pending}
-      className={`relative flex h-12 w-full items-center justify-center gap-3 rounded-md border px-5 font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176b3a] disabled:cursor-not-allowed disabled:opacity-60 ${google
+      className={`relative flex h-12 w-full items-center justify-center gap-3 rounded-md border px-5 font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60 ${google
         ? "border-[#747775] bg-white text-[#1f1f1f] hover:bg-[#f6f8fa]"
-        : "border-transparent bg-[#176b3a] text-white hover:bg-[#11562e]"}`}>
+        : "border-transparent bg-primary text-white hover:bg-primary-hover"}`}>
       {pending ? <LoaderCircle size={20} className="shrink-0 animate-spin" aria-hidden="true" />
         : google ? <span className="relative size-5 shrink-0 overflow-hidden" aria-hidden="true">
           <Image src="/google-sign-in-icon.png" alt="" width={40} height={40}

@@ -61,7 +61,7 @@ function ReviewActions({ reviewed }: { reviewed: boolean }) {
         name="intent"
         value="save"
         disabled={pending}
-        className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-[#aeb8b0] bg-white px-4 text-sm font-semibold text-[#28332b] hover:bg-[#f4f6f4] disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-control bg-surface px-4 text-sm font-semibold text-secondary hover:bg-surface-hover disabled:cursor-wait disabled:opacity-60"
       >
         <Save size={17} aria-hidden="true" />
         {pending && intent === "save" ? "Saving..." : "Save changes"}
@@ -72,7 +72,7 @@ function ReviewActions({ reviewed }: { reviewed: boolean }) {
           name="intent"
           value="review"
           disabled={pending}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#176b3a] px-5 text-sm font-semibold text-white hover:bg-[#11562e] disabled:cursor-wait disabled:bg-[#8fa197]"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover disabled:cursor-wait disabled:bg-disabled-action"
         >
           <Check size={17} aria-hidden="true" />
           {pending && intent === "review" ? "Approving..." : "Approve note"}
@@ -140,17 +140,17 @@ export function ReviewEditor({
   const action = saveFieldNoteReview.bind(null, noteId);
 
   return (
-    <form action={action} className="overflow-hidden rounded-md border border-[#d7ddd7] bg-white">
-      <div className="flex items-center justify-between gap-4 border-b border-[#e1e5e0] px-5 py-4 sm:px-6">
+    <form action={action} className="overflow-hidden rounded-md border border-line bg-surface">
+      <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-4 sm:px-6">
         <div>
           <h2 className="text-lg font-semibold">Line items</h2>
-          <p className="mt-1 text-sm text-[#657068]">Match the work to your price book and confirm the total.</p>
+          <p className="mt-1 text-sm text-muted">Match the work to your price book and confirm the total.</p>
         </div>
         {!locked ? (
           <button
             type="button"
             onClick={addItem}
-            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border border-[#aeb8b0] bg-white px-3 text-sm font-semibold hover:bg-[#f4f6f4]"
+            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border border-control bg-surface px-3 text-sm font-semibold hover:bg-surface-hover"
           >
             <Plus size={16} aria-hidden="true" />
             Add item
@@ -158,7 +158,7 @@ export function ReviewEditor({
         ) : null}
       </div>
 
-      <div className="divide-y divide-[#e1e5e0]">
+      <div className="divide-y divide-line">
         {items.map((item, index) => {
           const lineTotal = Number(item.quantity) * Number(item.unit_price);
           const needsAttention = !item.catalog_item_id || Number(item.unit_price) === 0;
@@ -167,9 +167,9 @@ export function ReviewEditor({
               <input type="hidden" name="line_item_id" value={item.id} />
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <p className="text-sm font-semibold text-[#566159]">Item {index + 1}</p>
+                  <p className="text-sm font-semibold text-secondary">Item {index + 1}</p>
                   {needsAttention ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-[#fff3d6] px-2 py-1 text-xs font-semibold text-[#765513]">
+                    <span className="inline-flex items-center gap-1.5 rounded-md bg-warning-soft px-2 py-1 text-xs font-semibold text-warning">
                       <AlertTriangle size={13} aria-hidden="true" />
                       Check item
                     </span>
@@ -179,7 +179,7 @@ export function ReviewEditor({
                   <button
                     type="button"
                     onClick={() => setItems((current) => current.filter((row) => row.key !== item.key))}
-                    className="inline-flex size-9 items-center justify-center rounded-md text-[#6b756d] hover:bg-[#fff0ee] hover:text-[#8a2e25]"
+                    className="inline-flex size-9 items-center justify-center rounded-md text-muted hover:bg-danger-soft hover:text-danger"
                     aria-label={`Remove item ${index + 1}`}
                     title="Remove item"
                   >
@@ -236,7 +236,7 @@ export function ReviewEditor({
                 <label className="block sm:col-span-2">
                   <span className="field-label">Unit price</span>
                   <div className="relative">
-                    <span className="absolute left-3 top-3 text-[#657068]">$</span>
+                    <span className="absolute left-3 top-3 text-muted">$</span>
                     <input
                       className="field-input field-input-prefix"
                       name="unit_price"
@@ -253,7 +253,7 @@ export function ReviewEditor({
                 </label>
                 <div className="sm:col-span-2">
                   <span className="field-label">Total</span>
-                  <div className="flex h-11 items-center font-semibold text-[#176b3a]">
+                  <div className="flex h-11 items-center font-semibold text-accent">
                     {money.format(Number.isFinite(lineTotal) ? lineTotal : 0)}
                   </div>
                 </div>
@@ -263,13 +263,13 @@ export function ReviewEditor({
         })}
       </div>
 
-      <div className="flex flex-col gap-5 border-t border-[#d7ddd7] bg-[#f8faf8] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="flex flex-col gap-5 border-t border-line bg-surface-muted px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div>
-          <p className="text-sm text-[#657068]">Note total</p>
+          <p className="text-sm text-muted">Note total</p>
           <p className="mt-1 text-2xl font-semibold">{money.format(total)}</p>
         </div>
         {locked ? (
-          <p className="text-sm font-medium text-[#657068]">
+          <p className="text-sm font-medium text-muted">
             {status === "invoiced" ? "Invoiced notes are locked." : "Invoice creation started. Line items are locked."}
           </p>
         ) : (

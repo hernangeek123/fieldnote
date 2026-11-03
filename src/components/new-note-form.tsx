@@ -56,15 +56,15 @@ export function NewNoteForm({ customers, today }: {
     <form onSubmit={(event) => {
       event.preventDefault();
       void save(new FormData(event.currentTarget));
-    }} className="mt-8 rounded-md border border-[#d7ddd7] bg-white p-5 sm:p-7">
+    }} className="mt-8 rounded-md border border-line bg-surface p-5 sm:p-7">
       <Notice error={error} />
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block"><span className="field-label">Customer</span><select className="field-input" name="customer_id" value={customer} onChange={(event) => setCustomer(event.target.value)} disabled={saving}><option value="">No customer selected</option>{customers.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
         <label className="block"><span className="field-label">Job date</span><input className="field-input" type="date" name="occurred_on" value={date} onChange={(event) => setDate(event.target.value)} disabled={saving} required /></label>
       </div>
       <VoiceNoteInput onStateChange={setVoice} disabled={saving} />
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#e1e5e0] pt-5">
-        <p className="flex items-center gap-2 text-sm text-[#657068]"><BookOpenText size={17} />Saved notes remain drafts until you review them.</p>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
+        <p className="flex items-center gap-2 text-sm text-muted"><BookOpenText size={17} />Saved notes remain drafts until you review them.</p>
         <SubmitButton label="Save draft" pendingLabel="Saving..." icon="save" disabled={voice.busy} isPending={saving} />
       </div>
     </form>

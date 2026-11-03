@@ -13,9 +13,9 @@ export default async function NewNotePage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <p className="text-sm font-semibold text-[#377348]">New field note</p>
+      <p className="text-sm font-semibold text-accent">New field note</p>
       <h1 className="mt-1 text-3xl font-semibold">Capture the job while it is fresh.</h1>
-      <p className="mt-3 text-[#657068]">Record the job details or type a rough note, then review the transcript before saving.</p>
+      <p className="mt-3 text-muted">Record the job details or type a rough note, then review the transcript before saving.</p>
       <Notice error={first(params.error)} success={first(params.created)} />
 
       <NewNoteForm customers={customers ?? []} today={today} />
