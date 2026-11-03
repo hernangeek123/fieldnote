@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { signOut } from "@/app/app/actions";
 import { SiteFooter } from "@/components/site-footer";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
   { href: "/app", label: "Overview", icon: LayoutDashboard },
@@ -25,17 +26,18 @@ export function AppShell({
     <NavigationGuardProvider>
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-          <Link href="/app" className="text-xl font-semibold">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-5 sm:px-8">
+          <Link href="/app" className="shrink-0 text-lg font-semibold sm:text-xl">
             FieldNote
           </Link>
-          <Link
-            href="/app/notes/new"
-            className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover"
-          >
-            <Plus size={17} aria-hidden="true" />
-            New note
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
+            <Link href="/app/notes/new" aria-label="New note"
+              className="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-white hover:bg-primary-hover sm:px-4">
+              <Plus size={17} aria-hidden="true" />
+              <span className="hidden min-[360px]:inline">New note</span>
+            </Link>
+          </div>
         </div>
       </header>
 

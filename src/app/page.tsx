@@ -1,21 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, Check, Mic, ReceiptText } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
+import { PublicHeader } from "@/components/public-header";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-          <p className="text-xl font-semibold">FieldNote</p>
-          <Link
-            href="/login"
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-control px-4 text-sm font-semibold hover:bg-surface-hover"
-          >
-            Sign in <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
       <main className="flex-1">
       <section className="mx-auto max-w-6xl px-5 pb-12 pt-14 sm:px-8 sm:pt-20">

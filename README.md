@@ -65,8 +65,9 @@ full setup run and physical-phone acceptance still need pre-submission checks.
 
 ## Appearance
 
-The footer's **Appearance** selector offers **Light**, **Dark**, and **System**.
-System follows the device's color preference, including changes while the page
+The header's **Dark mode** toggle switches between Light and Dark. The adjacent
+monitor button (**Use system theme**) follows the device's color preference,
+including changes while the page
 is open. A saved choice applies before page content paints, persists across
 pages/reloads when browser storage is available, and syncs between tabs on the
 same site. Theme preferences stay in the browser, independently of the account.

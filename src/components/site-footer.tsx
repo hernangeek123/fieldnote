@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { GuardedLink } from "@/components/navigation-guard";
-import { ThemeSelect } from "@/components/theme-select";
 
 export function SiteFooter({ workspace = false }: { workspace?: boolean }) {
   const FooterLink = workspace ? GuardedLink : Link;
@@ -18,7 +17,6 @@ export function SiteFooter({ workspace = false }: { workspace?: boolean }) {
             <FooterLink href="/" className={linkClassName}>Home</FooterLink>
             <FooterLink href="/app" className={linkClassName}>Workspace</FooterLink>
           </nav>
-          <ThemeSelect />
           <p className="text-xs leading-5 text-muted">© 2026 FieldNote.</p>
         </div>
       </div>

@@ -15,9 +15,9 @@ test("hosted login renders the sign-in form", async () => {
   assert.match(html, /Email me a sign-in link/);
   assert.match(html, /Continue with Google/);
   assert.match(html, /Appearance/);
-  for (const mode of ["light", "dark", "system"]) {
-    assert.match(html, new RegExp(`<option value="${mode}"`));
-  }
+  assert.match(html, /role="switch"/);
+  assert.match(html, /aria-label="Dark mode"/);
+  assert.match(html, /Use system theme/);
   assert.match(html, /fieldnote:appearance:v1/);
 });
 

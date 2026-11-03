@@ -16,8 +16,9 @@ to add the sample customer and price book. Do not share sign-in links or passwor
 
 ## Capture And Review
 
-Use the footer's **Appearance** selector to check Light, Dark, and System. Confirm
-text, fields, status badges, and the selector fit in each mode. Reload after an
+Use the header's **Dark mode** toggle and **Use system theme** monitor button to
+check Light, Dark, and System. Confirm text, fields, status badges, and header
+controls fit in each mode. Reload after an
 explicit choice to check it persists when browser storage is enabled.
 
 1. Open Customers and Price book. Check that contact details, prices, and pencil

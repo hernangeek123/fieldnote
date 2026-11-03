@@ -4,6 +4,7 @@ import { hasSupabaseEnv } from "@/lib/supabase/config";
 import { LoginSubmitButton } from "@/components/login-submit-button";
 import { safeRedirectPath } from "@/lib/auth/redirect-path";
 import { SiteFooter } from "@/components/site-footer";
+import { PublicHeader } from "@/components/public-header";
 
 type LoginPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -22,9 +23,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <PublicHeader showSignIn={false} />
     <main className="flex-1 px-5 py-8 sm:px-8">
       <div className="mx-auto max-w-md">
-        <section className="mt-16">
+        <section className="mt-8 sm:mt-12">
           <div className="flex size-11 items-center justify-center rounded-md bg-primary text-white">
             <Mail size={21} aria-hidden="true" />
           </div>
