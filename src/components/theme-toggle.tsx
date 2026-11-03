@@ -65,7 +65,7 @@ export function ThemeToggle() {
       <button type="button" role="switch" aria-label="Dark mode" aria-checked={dark}
         title={dark ? "Switch to light mode" : "Switch to dark mode"}
         onClick={() => setPreference(dark ? "light" : "dark")}
-        className="inline-flex size-11 items-center justify-center rounded-md border border-control bg-surface hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+        className="inline-flex size-11 items-center justify-center rounded-md bg-surface hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <span aria-hidden="true" className={`relative h-5 w-9 rounded-full ${dark ? "bg-primary" : "bg-line"}`}>
           <span className={`absolute left-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-white text-primary motion-safe:transition-transform ${dark ? "translate-x-4" : "translate-x-0"}`}>
             <Icon size={12} />
@@ -74,8 +74,8 @@ export function ThemeToggle() {
       </button>
       <button type="button" aria-label="Use system theme" aria-pressed={preference === "system"}
         title="Follow device theme" onClick={() => setPreference("system")}
-        className={`inline-flex size-11 items-center justify-center rounded-md border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${preference === "system"
-          ? "border-primary bg-primary text-white" : "border-control bg-surface text-secondary hover:bg-surface-hover"}`}>
+        className={`inline-flex size-11 items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${preference === "system"
+          ? "bg-primary text-white" : "bg-surface text-secondary hover:bg-surface-hover"}`}>
         <Monitor size={17} aria-hidden="true" />
       </button>
     </div>

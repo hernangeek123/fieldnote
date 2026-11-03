@@ -10,7 +10,7 @@ export function PublicHeader({ showSignIn = true }: { showSignIn?: boolean }) {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />
           {showSignIn ? (
-            <Link href="/login" className="inline-flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-md border border-control px-3 text-sm font-semibold hover:bg-surface-hover sm:px-4">
+            <Link href="/login" className="inline-flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-md px-3 text-sm font-semibold hover:bg-surface-hover sm:px-4">
               Sign in <ArrowRight size={16} aria-hidden="true" className="hidden min-[360px]:block" />
             </Link>
           ) : null}
