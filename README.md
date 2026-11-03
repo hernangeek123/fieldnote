@@ -63,6 +63,11 @@ existing second account outside Google's test-user list and the prior workflow
 through Sandbox payment and paid-status sync. A completely new Google account's
 full setup run and physical-phone acceptance still need pre-submission checks.
 
+Public policies: [Privacy Policy](https://fieldnote-lime.vercel.app/privacy) and
+[Terms of Service](https://fieldnote-lime.vercel.app/terms). Google's branding
+review and site-ownership result are recorded in
+[the branding record](docs/GOOGLE_BRANDING_REVIEW.md).
+
 ## Appearance
 
 The header's **Dark mode** toggle switches between Light and Dark. The adjacent

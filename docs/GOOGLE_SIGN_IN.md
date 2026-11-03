@@ -82,19 +82,24 @@ site using an existing second account outside Google's test-user list. The
 callback returned to `/app/notes`, Supabase linked the Google identity to the
 existing email account, and sign-out protected the workspace again. All 40
 regression tests, lint, the production build, and six hosted HTTP checks passed.
-Google remains External/Testing with identity scopes only and zero test users;
+At that November 2 check, Google was External/Testing with zero test users;
 no Gmail, Drive, or offline access is requested. Physical-phone acceptance is
 still pending. Detailed evidence is recorded in JUDGE_WALKTHROUGH.md.
 
 ## Displayed App Name And Branding
 
-Google's saved app name is already FieldNote. The app remains in Testing, and
-Google currently shows the Supabase callback hostname in the account chooser.
-Google requires brand verification to display the configured name. Proposed
-public privacy/terms pages, Search Console ownership proof, and publication
-steps are tracked in [the branding review](GOOGLE_BRANDING_REVIEW.md). The owner
-approved the prepared changes; neither Google approval nor a new chooser label has
-been established. Keep the existing callback and identity-only scopes intact.
+On November 3, 2026, the approved privacy/terms pages and ownership tag were
+published. Search Console verified the exact Vercel URL-prefix for the owner's
+Google account, and the OAuth app was changed to External / In production.
+The branding review returned an ownership-propagation issue: Google instructs
+waiting 24 hours after ownership verification before retrying. Retry no earlier
+than November 4 at noon America/New_York (17:00 UTC).
+
+Google approval and a new account-chooser label have not been established.
+The full result and retry steps are tracked in
+[the branding record](GOOGLE_BRANDING_REVIEW.md). Keep the existing callback and
+identity-only scopes intact. The ownership delay concerns branding, not a
+confirmed failure of sign-in.
 
 ## Google Button Asset
 
