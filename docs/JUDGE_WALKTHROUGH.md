@@ -1,5 +1,28 @@
 # FieldNote Judge Walkthrough
 
+## November 3 Submission Preflight
+
+The owner confirmed all remaining testing was complete, including the fresh-user
+and physical-phone checks discussed immediately beforehand. This is an owner
+report, separate from the dated agent-observed evidence below; device metadata
+and an itemized fresh-user trace were not supplied.
+
+A new recorded desktop run verified uploaded sample audio, live transcription,
+transcript correction, three AI matches totaling USD 320, approval, and actual
+PayPal Sandbox draft creation. The final video's new invoice remains Draft and
+was not sent or paid. The October 9 paid example is clearly identified as a
+separate prior payment. The final public video is https://youtu.be/Gh-7FGhkBLE.
+
+All 44 regression tests, lint, and the production build passed after the targeted
+dependency updates to Next.js 16.4.4, Zod 4.6.7, and Undici 7.30.1. The production
+dependency audit reports no known vulnerabilities. Seven hosted HTTP checks
+passed before this dependency release; they must pass again after deployment.
+
+The project story, nine technology tags, app/source links, three captioned
+screenshots, video link, and judge instructions have been saved in Devpost.
+Entrant details and eligibility were confirmed directly by the owner. The entry
+is at its final terms page and has not yet been submitted.
+
 This is a reproducible acceptance-test recipe, not a claim that every step has
 already passed in production. All invoices in this walkthrough use PayPal
 Sandbox; there are no real-money payments.

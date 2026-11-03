@@ -118,5 +118,6 @@ personal account passwords, and real payment details out of the testing notes.
   omit sign-in links and credentials.
 
 Google sign-in, the sample workflow, and Sandbox paid-status sync have recorded
-desktop verification. Physical-phone acceptance remains pending. Detailed dated
+desktop verification. The owner reported physical-phone and fresh-user checks
+complete on November 3; no detailed device trace was supplied. Detailed dated
 evidence is in [the acceptance record](JUDGE_WALKTHROUGH.md).

@@ -1,7 +1,7 @@
 # FieldNote Devpost Draft
 
-Updated November 2, 2026. This is editable submission copy, not a published
-entry. Verify the final wording against the footage and acceptance record.
+Updated November 3, 2026. This is the prepared submission copy. The demo video
+is public; the hackathon entry remains a draft until final submission is verified.
 
 ## Project Name
 
@@ -45,8 +45,7 @@ security enforcing record ownership. Server-side application actions handle
 authenticated mutations and invoice operations.
 
 Vercel AI Gateway connects the app to OpenAI transcription and structured
-extraction models. The verified hosted extraction configuration uses GPT-4.1
-Mini; transcription uses GPT-4o Mini Transcribe. AI output is treated as a
+extraction models. AI output is treated as a
 suggestion, not authorization to invoice. The user selects the customer and
 reviews the result against the business's own catalog.
 
@@ -91,10 +90,10 @@ recipient handling matter as much as generating the initial suggestions.
 
 ## What's Next
 
-Before submission, finish physical-phone acceptance and a completely new Google
-account's setup and sample draft test. Future work could include general email
-delivery, tax and discount support, additional currencies, and better draft recovery.
-These are planned improvements, not current capabilities.
+Future work includes general email delivery, tax and discount support,
+additional currencies, and better draft recovery. FieldNote currently focuses
+on the reviewed USD Sandbox invoicing workflow shown in the demo. These are
+planned improvements, not current capabilities.
 
 ## Built With
 
@@ -105,7 +104,7 @@ Vercel AI Gateway, OpenAI, PayPal Invoicing API v2.
 
 - App: https://fieldnote-lime.vercel.app
 - Repository: https://github.com/hernangeek123/fieldnote (private until owner-approved publication).
-- Video: pending recording and owner-approved public YouTube upload.
+- Video: https://youtu.be/Gh-7FGhkBLE (public, Mike Wayne, 2:13).
 - Judge instructions: [JUDGE_INSTRUCTIONS.md](JUDGE_INSTRUCTIONS.md).
 - Technical setup: [README.md](../README.md). Dated verification: [JUDGE_WALKTHROUGH.md](JUDGE_WALKTHROUGH.md).
 
@@ -147,7 +146,8 @@ problems, contact the submitter through Devpost with the visible error.
 
 ### Submission Preflight
 
-This copy is prepared, not posted to Devpost. Google login was verified with an
-existing second account outside Google's test-user list; a brand-new account's
-complete setup run and physical-phone acceptance remain pending. Confirm those
-results, add the final public repository/video links, and review before submission.
+The owner reported all remaining tests completed on November 3. Detailed device
+metadata and a separate fresh-account trace were not supplied, so that report is
+kept distinct from agent-observed evidence. The demo video is public and its link
+has persisted in Devpost. Repository publication, the remaining form fields, and
+final submission are being completed separately.

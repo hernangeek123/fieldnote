@@ -8,6 +8,7 @@ price book, and create a PayPal Sandbox invoice. Prices come from the owner's
 catalog, not from the model.
 
 [Live app](https://fieldnote-lime.vercel.app) |
+[Demo video](https://youtu.be/Gh-7FGhkBLE) |
 [Judge instructions](docs/JUDGE_INSTRUCTIONS.md) |
 [Submission checklist](docs/HACKATHON_SUBMISSION.md) |
 [Demo script](docs/DEMO_SCRIPT.md)
@@ -61,7 +62,8 @@ no PayPal login. Optional payment testing uses a Sandbox buyer you control.
 The [acceptance record](docs/JUDGE_WALKTHROUGH.md) documents Google login with an
 existing second account outside Google's test-user list and the prior workflow
 through Sandbox payment and paid-status sync. A completely new Google account's
-full setup run and physical-phone acceptance still need pre-submission checks.
+full setup run and physical-phone checks were reported complete by the owner on
+November 3; detailed device metadata and fresh-user traces were not supplied.
 
 Public policies: [Privacy Policy](https://fieldnote-lime.vercel.app/privacy) and
 [Terms of Service](https://fieldnote-lime.vercel.app/terms). Google's branding
@@ -231,8 +233,10 @@ alone does not establish that authentication, AI, and PayPal work together.
 
 The [pre-publication review](docs/PREPUBLICATION_REVIEW.md) records the scoped
 secret/history scans and sign-in redirect hardening. It is not a comprehensive
-security certification. Publication remains pending. Google judge access has a
-verified login path; physical-phone acceptance remains pending.
+security certification. Google judge access has a verified login path. The owner
+reported the remaining phone and fresh-user checks complete on November 3.
+The current production-dependency audit is clean after the documented security
+updates. Public-release and submission status are recorded in the checklist.
 
 ## License
 

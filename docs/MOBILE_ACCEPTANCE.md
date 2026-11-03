@@ -1,6 +1,11 @@
 # Physical-Phone Acceptance
 
-Status: pending. Desktop responsive viewport checks passed, but do not certify
+Status: owner-reported complete on November 3, 2026, when the owner confirmed all
+remaining tests were done. Device/OS/browser details and per-step screenshots were
+not supplied. The original result table below describes the missing itemized
+evidence, not a claim that the owner has not tested the phone flow.
+
+Desktop responsive viewport checks passed, but do not independently certify
 microphone permission, device audio formats, the virtual keyboard, or mobile
 browser lifecycle behavior.
 

@@ -1,7 +1,7 @@
 # PayPal AI Hackathon Submission
 
 Requirements checked against the [official rules](https://paypalaihackathon.devpost.com/rules)
-on November 2, 2026. Also review the
+on November 3, 2026. Also review the
 [FAQ](https://paypalaihackathon.devpost.com/details/faqs) and
 [resources](https://paypalaihackathon.devpost.com/resources) before submitting.
 
@@ -13,29 +13,33 @@ Keep judge access available without charge through **December 15, 2026,
 
 - [x] Add a recognizable open-source license at the repository root: MIT.
 - [x] Document the live URL, setup, and test walkthrough.
-- [ ] Complete the production acceptance record in JUDGE_WALKTHROUGH.md.
+- [x] Update the production acceptance record (November 3; owner-reported final phone/fresh-user checks distinguished from agent evidence).
 - [x] Verify hosted Google login/sign-out with a second account outside Google's test-user list (November 2; existing FieldNote account).
-- [ ] Verify a completely new Google account's signup, empty-workspace setup, and sample draft flow.
+- [x] Owner reported the remaining fresh-Google-user and physical-phone checks complete (November 3).
 - [x] Prepare Google access, sample setup, draft-only steps, and optional Sandbox testing instructions in JUDGE_INSTRUCTIONS.md and DEVPOST_DRAFT.md.
-- [ ] Add the reviewed judge instructions and any necessary assisted Sandbox access details to the submission form.
+- [x] Save the reviewed judge instructions in the submission form; main test needs no PayPal password.
 - [ ] Keep hosting, Google authentication, and AI access funded/available
       throughout judging.
 - [x] Review current source and reachable commit history for secrets (October 10; repeat before publication if content changes).
 - [ ] Make the repository public before submission, with the owner's approval.
-- [ ] Record functioning app footage in English, under three minutes.
-- [ ] Publish the video publicly on YouTube and add its URL to Devpost.
+- [x] Record functioning app footage in English, under three minutes (November 3; 2:13 narrated export).
+- [x] Publish the video publicly on YouTube: https://youtu.be/Gh-7FGhkBLE (Mike Wayne; November 3).
+- [x] Save and verify the YouTube URL in the Devpost draft (November 3; persisted after reopening Project details).
 - [x] Prepare the English project description and Google testing-instructions draft (not submitted).
-- [ ] Review and enter the final English description and testing instructions in Devpost.
-- [ ] Verify meaningful AI and PayPal Sandbox use are visible in the submission.
+- [x] Save the final English story, testing instructions, technology tags, screenshots, app/repo links, and owner-confirmed organizer answers in Devpost.
+- [x] Verify meaningful AI and PayPal Sandbox use are visible in the public demo and submission draft.
+- [ ] Accept the final terms with action-time approval and verify successful submission.
 
+Video publication details are in [the demo record](DEMO_VIDEO.md).
 The repository remains private for now. These documents are preparation, not a
 submitted entry or a declaration that every acceptance check has passed.
 
 Prepared materials: [judge instructions](JUDGE_INSTRUCTIONS.md),
 [demo script](DEMO_SCRIPT.md),
 [Devpost description draft](DEVPOST_DRAFT.md), and
-[physical-phone checklist](MOBILE_ACCEPTANCE.md). These are local drafts;
-no Devpost fields, repository visibility, or video publication were changed.
+[physical-phone checklist](MOBILE_ACCEPTANCE.md). The project story and organizer
+fields are saved in Devpost, and the video is public. Repository publication and
+final acceptance of Devpost's terms remain pending.
 The [pre-publication review](PREPUBLICATION_REVIEW.md) records the secrets scan,
 dependency check, fixed sign-in redirect finding, and remaining review limits.
 
