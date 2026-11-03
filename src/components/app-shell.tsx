@@ -74,7 +74,7 @@ export function AppShell({
       <SiteFooter workspace />
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 grid h-16 grid-cols-4 border-t border-line bg-surface sm:hidden"
+        className="fixed inset-x-0 bottom-0 z-20 grid h-16 grid-cols-5 border-t border-line bg-surface sm:hidden"
         aria-label="Workspace navigation"
       >
         {navigation.map(({ href, label, icon: Icon }) => (
@@ -87,6 +87,13 @@ export function AppShell({
             <span className="truncate">{label}</span>
           </Link>
         ))}
+        <GuardedForm action={signOut} className="h-full min-w-0">
+          <button type="submit"
+            className="flex h-full w-full flex-col items-center justify-center gap-1 text-[11px] font-medium text-secondary hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent">
+            <LogOut size={19} aria-hidden="true" />
+            <span>Sign out</span>
+          </button>
+        </GuardedForm>
       </nav>
     </div>
     </NavigationGuardProvider>

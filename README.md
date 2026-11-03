@@ -71,6 +71,12 @@ Public policies: [Privacy Policy](https://fieldnote-lime.vercel.app/privacy) and
 review and site-ownership result are recorded in
 [the branding record](docs/GOOGLE_BRANDING_REVIEW.md).
 
+## Signing out
+
+On phones, **Sign out** is the last button in the bottom navigation. On desktop,
+it is at the bottom of the sidebar. Unsaved notes ask for confirmation before
+sign-out proceeds.
+
 ## Appearance
 
 The header's **Dark mode** toggle switches between Light and Dark. The adjacent
