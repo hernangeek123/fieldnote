@@ -5,6 +5,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "FieldNote",
   description: "Speak the job. Send the invoice. Get paid.",
+  // Public Search Console ownership proof for the project owner's Google account.
+  verification: { google: "F4P9Geh4LlHnAS43LFdwQqoJ7FpAP6PgT5NcFy_XdPs" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

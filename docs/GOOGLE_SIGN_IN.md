@@ -86,6 +86,16 @@ Google remains External/Testing with identity scopes only and zero test users;
 no Gmail, Drive, or offline access is requested. Physical-phone acceptance is
 still pending. Detailed evidence is recorded in JUDGE_WALKTHROUGH.md.
 
+## Displayed App Name And Branding
+
+Google's saved app name is already FieldNote. The app remains in Testing, and
+Google currently shows the Supabase callback hostname in the account chooser.
+Google requires brand verification to display the configured name. Proposed
+public privacy/terms pages, Search Console ownership proof, and publication
+steps are tracked in [the branding review](GOOGLE_BRANDING_REVIEW.md). The owner
+approved the prepared changes; neither Google approval nor a new chooser label has
+been established. Keep the existing callback and identity-only scopes intact.
+
 ## Google Button Asset
 
 `public/google-sign-in-icon.png` is Google's official light square icon asset,

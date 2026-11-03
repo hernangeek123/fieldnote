@@ -16,6 +16,8 @@ export function SiteFooter({ workspace = false }: { workspace?: boolean }) {
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6">
             <FooterLink href="/" className={linkClassName}>Home</FooterLink>
             <FooterLink href="/app" className={linkClassName}>Workspace</FooterLink>
+            <FooterLink href="/privacy" className={linkClassName}>Privacy</FooterLink>
+            <FooterLink href="/terms" className={linkClassName}>Terms</FooterLink>
           </nav>
           <p className="text-xs leading-5 text-muted">© 2026 FieldNote.</p>
         </div>

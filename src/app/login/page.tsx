@@ -1,4 +1,5 @@
 import { Mail, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { signIn, signInWithGoogle } from "./actions";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 import { LoginSubmitButton } from "@/components/login-submit-button";
@@ -85,6 +86,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <p className="mt-6 flex items-start gap-2 text-sm leading-6 text-muted">
             <ShieldCheck className="mt-0.5 shrink-0" size={17} aria-hidden="true" />
             Your customers and notes are isolated to your account.
+          </p>
+          <p className="mt-4 text-sm leading-6 text-muted">
+            Read the <Link href="/privacy" className="text-accent underline underline-offset-4">Privacy Policy</Link>
+            {" and "}<Link href="/terms" className="text-accent underline underline-offset-4">Terms of Service</Link>.
           </p>
         </section>
       </div>

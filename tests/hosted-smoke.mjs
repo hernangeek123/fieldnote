@@ -32,6 +32,22 @@ test("hosted workspace routes require sign-in", async () => {
   }
 });
 
+test("public policy pages and homepage links are available without signing in", async () => {
+  for (const [path, title] of [["/privacy", "Privacy Policy"], ["/terms", "Terms of Service"]]) {
+    const response = await request(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.match(html, new RegExp(`<title>${title} \\| FieldNote</title>`));
+    assert.match(html, /FieldNote project owner/);
+    assert.match(html, /mailto:n3rd1991@gmail\.com/);
+  }
+  const home = await request("/");
+  assert.equal(home.status, 200);
+  const html = await home.text();
+  assert.match(html, /href="\/privacy"/);
+  assert.match(html, /href="\/terms"/);
+});
+
 test("hosted callback without an authorization code returns a safe error", async () => {
   const response = await request("/auth/callback");
   assert.equal(response.status, 307);
