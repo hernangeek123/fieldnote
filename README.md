@@ -9,6 +9,7 @@ catalog, not from the model.
 
 [Live app](https://fieldnote-lime.vercel.app) |
 [Demo video](https://youtu.be/Gh-7FGhkBLE) |
+[Devpost entry](https://devpost.com/software/fieldnote) |
 [Judge instructions](docs/JUDGE_INSTRUCTIONS.md) |
 [Submission checklist](docs/HACKATHON_SUBMISSION.md) |
 [Demo script](docs/DEMO_SCRIPT.md)

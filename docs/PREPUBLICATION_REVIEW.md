@@ -1,9 +1,24 @@
 # Pre-Publication Review
 
+## Release Outcome
+
+On November 3, after reviewing the prepared release and author-identity exposure,
+the owner explicitly approved making `hernangeek123/fieldnote` public under MIT.
+GitHub's API confirmed `visibility: public`. The owner separately accepted the
+Official Rules and Devpost terms at the final action. Devpost then displayed
+**Project submitted!** for https://devpost.com/software/fieldnote.
+
+The tested security release is commit `e0285c9`, production deployment
+`dpl_CpxazV7Kh5gXxZ8MiX5c5ogKUkUx` (Ready). All seven hosted checks passed after
+deployment. The final full-history scan at that commit covered 29 commits and
+697,335 bytes, with no leaks. The refreshed 100-file candidate directory scan
+covered 381,630 bytes, with no leaks. These findings are scoped checks, not a
+comprehensive security certification. Ongoing judge access remains necessary.
+
 ## November 3 Release Candidate
 
 The owner requested completion and submission of the entire hackathon entry.
-Public-repository approval and final terms acceptance remain separate final
+Public-repository approval and final terms acceptance were separate final
 actions; this section records the review completed before requesting them.
 
 - Gitleaks 8.30.1 scanned all 28 reachable commits with full history, full

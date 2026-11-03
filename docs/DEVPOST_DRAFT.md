@@ -1,7 +1,7 @@
 # FieldNote Devpost Draft
 
-Updated November 3, 2026. This is the prepared submission copy. The demo video
-is public; the hackathon entry remains a draft until final submission is verified.
+Updated November 3, 2026. This copy was saved in the submitted Devpost entry:
+https://devpost.com/software/fieldnote . The video and MIT repository are public.
 
 ## Project Name
 
@@ -103,7 +103,7 @@ Vercel AI Gateway, OpenAI, PayPal Invoicing API v2.
 ## Links And Testing Instructions
 
 - App: https://fieldnote-lime.vercel.app
-- Repository: https://github.com/hernangeek123/fieldnote (private until owner-approved publication).
+- Repository: https://github.com/hernangeek123/fieldnote (public, MIT).
 - Video: https://youtu.be/Gh-7FGhkBLE (public, Mike Wayne, 2:13).
 - Judge instructions: [JUDGE_INSTRUCTIONS.md](JUDGE_INSTRUCTIONS.md).
 - Technical setup: [README.md](../README.md). Dated verification: [JUDGE_WALKTHROUGH.md](JUDGE_WALKTHROUGH.md).
@@ -149,5 +149,7 @@ problems, contact the submitter through Devpost with the visible error.
 The owner reported all remaining tests completed on November 3. Detailed device
 metadata and a separate fresh-account trace were not supplied, so that report is
 kept distinct from agent-observed evidence. The demo video is public and its link
-has persisted in Devpost. Repository publication, the remaining form fields, and
-final submission are being completed separately.
+has persisted in Devpost. The story, media, links, judge instructions, and
+owner-confirmed organizer answers were saved. The owner explicitly approved
+public repository release and final terms acceptance; Devpost confirmed successful
+submission on November 3. Judges must retain free access through December 15.

@@ -49,6 +49,8 @@ https://devpost.com/submit-to/31302-paypal-ai-hackathon/manage/submissions/12096
 During the subsequent authorized full-submission pass, the story, nine accurate
 technology tags, app/repository links, three captioned screenshots, judge
 instructions, and organizer answers were saved. Entrant details, eligibility,
-integration rating 10, significant learning, career value, and feedback-contact
-consent were confirmed directly by the owner. The entry remains **Draft**, at
-the final terms page. Repository publication and final submission remain pending.
+required feedback and contact preferences were confirmed directly by the owner.
+The owner then explicitly approved public repository release and accepted the
+final Official Rules and Devpost terms. GitHub confirmed public visibility before
+submission. Devpost displayed **Project submitted!** and **Submitted to PayPal AI
+Hackathon** on November 3. Entry: https://devpost.com/software/fieldnote .

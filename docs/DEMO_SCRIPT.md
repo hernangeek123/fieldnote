@@ -1,7 +1,9 @@
 # FieldNote Demo Script
 
-Target runtime: 2 minutes 40 seconds. This is a recording plan, not completed
-footage. Show the working app, with all payments clearly identified as Sandbox.
+The original recording plan below targeted 2 minutes 40 seconds. The completed
+2:13 narrated demo is public at https://youtu.be/Gh-7FGhkBLE and was included in
+the submitted Devpost entry on November 3. Its new invoice stays Draft; the paid
+example is explicitly labeled as a separate October 9 Sandbox payment.
 
 ## Before Recording
 

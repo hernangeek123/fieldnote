@@ -16,12 +16,15 @@ separate prior payment. The final public video is https://youtu.be/Gh-7FGhkBLE.
 All 44 regression tests, lint, and the production build passed after the targeted
 dependency updates to Next.js 16.4.4, Zod 4.6.7, and Undici 7.30.1. The production
 dependency audit reports no known vulnerabilities. Seven hosted HTTP checks
-passed before this dependency release; they must pass again after deployment.
+passed again after production deployment `dpl_CpxazV7Kh5gXxZ8MiX5c5ogKUkUx`,
+commit `e0285c9`, reached Ready on the live alias.
 
 The project story, nine technology tags, app/source links, three captioned
 screenshots, video link, and judge instructions have been saved in Devpost.
 Entrant details and eligibility were confirmed directly by the owner. The entry
-is at its final terms page and has not yet been submitted.
+was submitted on November 3 after explicit owner approval of public repository
+release and final terms acceptance. GitHub confirmed public visibility and Devpost
+displayed “Project submitted!” at https://devpost.com/software/fieldnote.
 
 This is a reproducible acceptance-test recipe, not a claim that every step has
 already passed in production. All invoices in this walkthrough use PayPal
